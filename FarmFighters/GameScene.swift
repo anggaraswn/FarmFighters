@@ -8,8 +8,19 @@
 import SpriteKit
 import GameplayKit
 
+enum WeaponType {
+    case orange
+    case bom
+}
+
 class GameScene: SKScene {
+    var player1: Player = Player(characters: [])
+    var player2: Player = Player(characters: [])
+    
+    var characters = [String: Character]()
+    
     var orange: Orange?
+    var bom: Bom?
     var touchStart: CGPoint = .zero
     var shapeNode = SKShapeNode()
     var boundary = SKNode()
@@ -18,9 +29,8 @@ class GameScene: SKScene {
     let maxDragDistance: CGFloat = 150.0
     var turn: UInt32 = 1
     
-    var chicken: SKSpriteNode!
-    var duck: SKSpriteNode!
-    var selectedNode: SKSpriteNode?
+    
+    var selectedCharacter: Character?
     var token = 1
     var touchStartTime: TimeInterval?
     var isNodeReadyToMove = false {
@@ -31,6 +41,12 @@ class GameScene: SKScene {
     var initialNodePosition: CGPoint?
     var cancelIcon: SKSpriteNode!
     
+    var orangeButton: [SKSpriteNode] = []
+    var bomButton: [SKSpriteNode] = []
+    
+    // Current weapon type
+    var currentWeapon: WeaponType = .orange
+    
     var cameraNode = SKCameraNode()
     var initialCameraPosition: CGPoint = .zero
     var opponentCameraPosition: CGPoint = .zero
@@ -38,69 +54,26 @@ class GameScene: SKScene {
     var isOrangeShot = false
     var canShoot = true
     
-    var lifeTroops: Int = 3
-    var lifeNodes: [SKSpriteNode] = []
-    var playableRect: CGRect = CGRect.zero
-    
-    func setupPlayableRect() {
-        // Get the screen size
-        let screenSize = UIScreen.main.bounds.size
-        
-        // Define the playable rect based on the screen size
-        playableRect = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
-    }
-    
-    func setupLifePos(_ node: SKSpriteNode, i: CGFloat, j: CGFloat) {
-        let width = playableRect.width
-        let height = playableRect.height
-        
-        print(width)
-        print(height)
-
-        node.setScale(0.4)
-        node.zPosition = 50.0
-
-        let nodeWidth = node.size.width * node.xScale
-        let nodeHeight = node.size.height * node.yScale
-        let padding: CGFloat = 100.0
-        
-        node.position = CGPoint(x: playableRect.minX + (nodeWidth + padding) * i,
-                                       y: playableRect.maxY - (nodeHeight + padding) * (j + 1))
-    }
-    
-    func setupLife() {
-        // Call this function to set the playable rect
-        setupPlayableRect()
-        
-        // ambil gambar (load images)
-        let node1 = SKSpriteNode(imageNamed: "heart-on")
-        let node2 = SKSpriteNode(imageNamed: "heart-on")
-        let node3 = SKSpriteNode(imageNamed: "heart-on")
-
-        // Set positions
-        setupLifePos(node1, i: 1.0, j: -2.0)
-        setupLifePos(node2, i: 2.0, j: -2.0)
-        setupLifePos(node3, i: 3.0, j: -2.0)
-
-        // Add nodes to the scene
-        self.addChild(node1)
-        self.addChild(node2)
-        self.addChild(node3)
-
-        // Append nodes to lifeNodes array
-        lifeNodes.append(node1)
-        lifeNodes.append(node2)
-        lifeNodes.append(node3)
-    }
-    
-    func createCharacter(){
-        chicken = (childNode(withName: "chicken") as! SKSpriteNode)
-        chicken.physicsBody!.categoryBitMask = PhysicsCategory.Character
-        chicken.physicsBody!.contactTestBitMask = PhysicsCategory.Orange
-        
-        duck = (childNode(withName: "duck") as! SKSpriteNode)
-        duck.physicsBody!.categoryBitMask = PhysicsCategory.Character
-        duck.physicsBody!.contactTestBitMask = PhysicsCategory.Orange
+    func setUpCharacter(){
+        let characterNames = ["chicken1", "chicken2", "chicken3", "duck1", "duck2", "duck3"]
+        for name in characterNames {
+            if let node = childNode(withName: name) {
+                let character = Character(node: node, scene: self)
+                character.physicsBody!.categoryBitMask = PhysicsCategory.Character
+                character.physicsBody!.contactTestBitMask = PhysicsCategory.Orange
+                
+                characters[name] = character
+                
+                node.removeFromParent()
+                addChild(character)
+                
+                if name.contains("chicken") {
+                    player1.characters.append(character)
+                } else if name.contains("duck") {
+                    player2.characters.append(character)
+                }
+            }
+        }
     }
     
     override func didMove(to view: SKView) {
@@ -117,8 +90,7 @@ class GameScene: SKScene {
         boundary.position = .zero
         addChild(boundary)
         
-        createCharacter()
-        setupLife()
+        setUpCharacter()
         
         cancelIcon = SKSpriteNode(imageNamed: "cancelIcon")
         cancelIcon.name = "cancelIcon"
@@ -136,20 +108,67 @@ class GameScene: SKScene {
         
         // Initialize the opponent camera position to the right side of the screen
         opponentCameraPosition = CGPoint(x: 3 * size.width / 4, y: size.height / 2)
+        
+        // Create and position the buttons
+        createButtons()
+    }
+    
+    func createButtons() {
+        // Create first set of buttons
+        let orangeTexture = SKTexture(imageNamed: "OrangeButton")
+        let orangeButton1 = SKSpriteNode(texture: orangeTexture)
+        orangeButton1.position = CGPoint(x: 100, y: 550) // Set an absolute position for the first orange button
+        orangeButton1.zPosition = 100 // Ensure it's rendered on top of other nodes
+        addChild(orangeButton1) // Add the first orange button to the scene
+        
+        let bomTexture = SKTexture(imageNamed: "bomButton")
+        let bomButton1 = SKSpriteNode(texture: bomTexture)
+        bomButton1.position = CGPoint(x: 200, y: 550) // Set an absolute position for the first bom button
+        bomButton1.zPosition = 100 // Ensure it's rendered on top of other nodes
+        addChild(bomButton1) // Add the first bom button to the scene
+        
+        // Create second set of buttons
+        let orangeTexture2 = SKTexture(imageNamed: "OrangeButton")
+        let orangeButton2 = SKSpriteNode(texture: orangeTexture2)
+        orangeButton2.position = CGPoint(x: 4300, y: 550) // Set an absolute position for the second orange button
+        orangeButton2.zPosition = 100 // Ensure it's rendered on top of other nodes
+        addChild(orangeButton2) // Add the second orange button to the scene
+        
+        let bomTexture2 = SKTexture(imageNamed: "bomButton")
+        let bomButton2 = SKSpriteNode(texture: bomTexture2)
+        bomButton2.position = CGPoint(x: 4200, y: 550) // Set an absolute position for the second bom button
+        bomButton2.zPosition = 100 // Ensure it's rendered on top of other nodes
+        addChild(bomButton2) // Add the second bom button to the scene
+        
+        // Assign the class variables for later reference
+        self.orangeButton = [orangeButton1, orangeButton2]
+        self.bomButton = [bomButton1, bomButton2]
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        if let node = atPoint(location) as? SKSpriteNode, node.name == "chicken" || node.name == "duck" {
+        if let node = atPoint(location) as? SKSpriteNode, let nodeName = node.name, let character = characters[nodeName]{
             
             node.physicsBody = nil
-            // Create the orange and add it to the scene at the touch location
-            orange = Orange()
-            orange?.physicsBody?.isDynamic =  false
-            orange?.position = location
-            addChild(orange!)
+            if currentWeapon == .orange{
+                // Create the orange and add it to the scene at the touch location
+                orange = Orange()
+                orange?.physicsBody?.isDynamic =  false
+                orange?.position = location
+                addChild(orange!)
+            }else if currentWeapon == .bom {
+                // Create the bom and add it to the scene at the touch location
+                bom = Bom()
+                bom?.physicsBody?.isDynamic = false
+                bom?.physicsBody?.density = 0.3
+                bom?.position = location
+                addChild(bom!)
+            }
+            // Increment the turn
+            turn += 1
+            print("Turn increased to \(turn)")
             
             // Store the location of the touch
             touchStart = location
@@ -157,11 +176,28 @@ class GameScene: SKScene {
             // Reset the shot flag
             isOrangeShot = false
             
-            selectedNode = node
+            selectedCharacter = character
+            initialNodePosition = character.position
             touchStartTime = touch.timestamp
             isNodeReadyToMove = false
-            initialNodePosition = node.position
+            //            initialNodePosition = node.position
             print("\(node.name!) touched")
+        }else{
+            
+            // Check if the touch was on any of the weapon buttons
+            for button in orangeButton {
+                if button.contains(location) {
+                    currentWeapon = .orange
+                    break
+                }
+            }
+            
+            for button in bomButton {
+                if button.contains(location) {
+                    currentWeapon = .bom
+                    break
+                }
+            }
         }
     }
     
@@ -184,7 +220,12 @@ class GameScene: SKScene {
             }
             
             // Update the position of the Orange to the current location
-            orange?.position = location
+            switch currentWeapon {
+            case .orange:
+                orange?.position = location
+            case .bom:
+                bom?.position = location
+            }
             
             // Show the predicted projectile path with dotted lines
             showProjectilePath(start: touchStart, end: location)
@@ -197,15 +238,15 @@ class GameScene: SKScene {
             shapeNode.isHidden = false
         }
         
-        guard let node = selectedNode else { return }
+        guard let character = selectedCharacter else { return }
         if token <= 0 { return }
         
-        if !node.contains(location) {
+        if !character.contains(location) {
             touchStartTime = nil
         }
         
         if isNodeReadyToMove {
-            node.position.x = location.x
+            character.position.x = location.x
             orange?.removeFromParent()
             orange = nil
         }
@@ -258,9 +299,15 @@ class GameScene: SKScene {
         
         let vector = CGVector(dx: dx, dy: dy)
         
-        // Set the Orange dynamic again and apply the vector as an impulse
-        orange?.physicsBody?.isDynamic = true
-        orange?.physicsBody?.applyImpulse(vector)
+        // Set the weapon dynamic again and apply the vector as an impulse
+        switch currentWeapon {
+        case .orange:
+            orange?.physicsBody?.isDynamic = true
+            orange?.physicsBody?.applyImpulse(vector)
+        case .bom:
+            bom?.physicsBody?.isDynamic = true
+            bom?.physicsBody?.applyImpulse(vector)
+        }
         
         // Set the orange shot flag to true
         isOrangeShot = true
@@ -268,8 +315,6 @@ class GameScene: SKScene {
         // Remove the path from shapeNode
         shapeNode.path = nil
         
-        // Add the turn
-        turn += 1
         
         //        // Disable shooting
         //        canShoot = false
@@ -280,31 +325,42 @@ class GameScene: SKScene {
         }
         pathDots.removeAll()
         
-        guard let node = selectedNode, let initialPosition = initialNodePosition else {return}
+        guard let character = selectedCharacter, let initialPosition = initialNodePosition else {return}
         
         
         if cancelIcon.contains(location) {
-            node.position = initialPosition
+            character.position = initialPosition
             isNodeReadyToMove = false
-            node.alpha = 1.0
+            character.alpha = 1.0
+            character.heart.alpha = 1.0
             touchStartTime = nil
         }else{
-            if node.position != initialPosition && token > 0 {
+            if initialNodePosition != character.position && token > 0 {
                 //                token -= 1
             }
-            node.alpha = 1.0
+            character.alpha = 1.0
+            character.heart.alpha = 1.0
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            let newPhysicsBody = SKPhysicsBody(rectangleOf: node.size)
-            newPhysicsBody.isDynamic = true
-            newPhysicsBody.allowsRotation = false
-            newPhysicsBody.pinned = false
-            newPhysicsBody.affectedByGravity = true
-            node.physicsBody = newPhysicsBody
+            if let texture = character.texture {
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.size)
+                    newPhysicsBody.isDynamic = false
+                    newPhysicsBody.allowsRotation = false
+                    newPhysicsBody.pinned = false
+                    newPhysicsBody.affectedByGravity = true
+                    newPhysicsBody.categoryBitMask = PhysicsCategory.Character
+                    newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
+                    
+                    DispatchQueue.main.async {
+                        character.physicsBody = newPhysicsBody
+                    }
+                }
+            }
         }
         
-        selectedNode = nil
+        selectedCharacter = nil
         touchStartTime = nil
         isNodeReadyToMove = false
     }
@@ -319,18 +375,30 @@ class GameScene: SKScene {
     //    }
     
     override func update(_ currentTime: TimeInterval) {
+        if isOrangeShot {
+            if let weapon = orange != nil ? orange : bom   {
+                //                print("\(weapon.physicsBody!.velocity.dx)")
+                // Check if the orange velocity is near zero
+                if abs(weapon.physicsBody!.velocity.dx) < 200 && abs(weapon.physicsBody!.velocity.dy) < 200 {
+                    // Check if the orange is on the ground or has come to a stop (you may need to adjust this condition based on your game)
+                    // Remove the orange and move the camera
+                    moveCameraAndRemoveOrange()
+                }
+            }
+        }
+        
         // Update the camera position to follow the orange
-        if let orange = orange {
+        if let weapon = orange != nil ? orange : bom {
             // Ensure the camera stays within the scene bounds
-            let cameraX = clamp(value: orange.position.x, lower: size.width / 4, upper: size.width - size.width / 4)
+            let cameraX = clamp(value: weapon.position.x, lower: size.width / 4, upper: size.width - size.width / 4)
             cameraNode.position = CGPoint(x: cameraX, y: size.height / 2)
             
             // Ensure the orange stays within the scene bounds
-            orange.position.x = clamp(value: orange.position.x, lower: orange.size.width / 2, upper: size.width - orange.size.width / 2)
-            orange.position.y = clamp(value: orange.position.y, lower: orange.size.height / 2, upper: size.height - orange.size.height / 2)
+            weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
+            weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
             
             // Check if the orange has stopped moving and has been shot
-            if isOrangeShot && orange.physicsBody?.velocity == CGVector(dx: 0, dy: 0) {
+            if isOrangeShot && weapon.physicsBody?.velocity == CGVector(dx: 0, dy: 0) {
                 if orangeStoppedTime == nil {
                     orangeStoppedTime = currentTime
                 } else if currentTime - orangeStoppedTime! > 0.2 {
@@ -342,12 +410,13 @@ class GameScene: SKScene {
             }
         }
         
-        if let touchStartTime = touchStartTime, let node = selectedNode {
+        if let touchStartTime = touchStartTime, let character = selectedCharacter {
             let touchDuration = currentTime - touchStartTime
             
             if touchDuration >= 3.0 && token > 0 {
                 isNodeReadyToMove = true
-                node.alpha = 0.5
+                character.alpha = 0.5
+                character.heart.alpha = 0.5
             }
         }
     }
@@ -359,10 +428,18 @@ class GameScene: SKScene {
         //        let zoomInAction = turn % 2 == 0 ? zoomInBottomRight() : zoomInBottomLeft()
         //        let groupAction = SKAction.group([moveAction, zoomInAction])
         cameraNode.run(moveAction) { [weak self] in
+            
             // Remove the orange from the scene
-            self?.orange?.removeFromParent()
-            self?.orange = nil
-            self?.isOrangeShot = false // Reset the flag
+            if self?.currentWeapon == .orange{
+                self?.orange?.removeFromParent()
+                self?.orange = nil
+                self?.isOrangeShot = false // Reset the flag
+            }
+            else if self?.currentWeapon == .bom{
+                self?.bom?.removeFromParent()
+                self?.bom = nil
+                self?.isOrangeShot = false // Reset the flag
+            }
             
             // Enable shooting again
             self?.canShoot = true
@@ -385,35 +462,42 @@ class GameScene: SKScene {
         return min(max(value, lower), upper)
     }
     
-    func reduceLife() {
+    func reduceLife(character: Character) {
+        character.health -= 0.5
         
-//        lifeTroops -= 1
-//        if lifeTroops <= 0 {
-//            lifeTroops = 0
-//        }
-//        lifeNodes[lifeTroops].texture = SKTexture(imageNamed: "heart-off")
+        if character.health <= 0 {
+            characters.removeValue(forKey: character.name ?? "")
+            character.removeFromParent()
+        }
+        
+        
+        //        lifeTroops -= 1
+        //        if lifeTroops <= 0 {
+        //            lifeTroops = 0
+        //        }
+        //        lifeNodes[lifeTroops].texture = SKTexture(imageNamed: "heart-off")
         
         //===
-
-        if lifeTroops <= 0 {
-                lifeTroops = 0
-                return
-            }
-
-            // Calculate the index based on current lifeTroops, starting from right to left
-            let index = lifeTroops - 1
-            let currentNode = lifeNodes[index]
-
-            // Check the current texture of the node
-            if currentNode.texture?.description.contains("heart-half") == true {
-                // If already "heart-half", change it to "heart-off" and decrement lifeTroops
-                currentNode.texture = SKTexture(imageNamed: "heart-off")
-                lifeTroops -= 1
-            } else {
-                // If not "heart-half", change it to "heart-half" now
-                currentNode.texture = SKTexture(imageNamed: "heart-half")
-            }
         
+        //        if lifeTroops <= 0 {
+        //            lifeTroops = 0
+        //            return
+        //        }
+        //
+        //        // Calculate the index based on current lifeTroops, starting from right to left
+        //        let index = lifeTroops - 1
+        //        let currentNode = lifeNodes[index]
+        //
+        //        // Check the current texture of the node
+        //        if currentNode.texture?.description.contains("heart-half") == true {
+        //            // If already "heart-half", change it to "heart-off" and decrement lifeTroops
+        //            currentNode.texture = SKTexture(imageNamed: "heart-off")
+        //            lifeTroops -= 1
+        //        } else {
+        //            // If not "heart-half", change it to "heart-half" now
+        //            currentNode.texture = SKTexture(imageNamed: "heart-half")
+        //        }
+        //
     }
 }
 
@@ -424,35 +508,17 @@ extension GameScene: SKPhysicsContactDelegate {
     // Called when the physicsWorld detects two nodes colliding
     func didBegin(_ contact: SKPhysicsContact) {
         
-        //
-        
-//        let nodeA = contact.bodyA.node
-//        let nodeB = contact.bodyB.node
-//
-//        // Check that the bodies collided hard enough
-//        if contact.collisionImpulse > 5 {
-//            if nodeA?.name == "monster-1" {
-//                removeSkull(node: nodeA!)
-//            } else if nodeB?.name == "monster-1" {
-//                removeSkull(node: nodeB!)
-//            }
-//        }
-        
-        //
-        
         let other = contact.bodyA.categoryBitMask == PhysicsCategory.Orange ? contact.bodyB : contact.bodyA
         
         switch other.categoryBitMask {
-        case PhysicsCategory.Character: //kena sekali --> heart health decrease (TROOPS)
+        case PhysicsCategory.Character:
             if contact.collisionImpulse > 20 {
-                reduceLife()
-                
-                if lifeTroops == 0, let node = other.node { //kena tiga kali --> ilang
-                    node.removeFromParent()
+                if let character = other.node as? Character {
+                    reduceLife(character: character)
                 }
             }
-        default: break
-            
+        default:
+            break
         }
         
         
