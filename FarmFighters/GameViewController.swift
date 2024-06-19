@@ -1,8 +1,8 @@
 //
 //  GameViewController.swift
-//  FarmFighters
+//  Euphorience
 //
-//  Created by Anggara Satya Wimala Nelwan on 19/06/24.
+//  Created by Anggara Satya Wimala Nelwan on 07/06/24.
 //
 
 import UIKit
@@ -31,12 +31,16 @@ class GameViewController: UIViewController {
         }
     }
 
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
-        } else {
-            return .all
-        }
+//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+//        if UIDevice.current.userInterfaceIdiom == .phone {
+//            return .allButUpsideDown
+//        } else {
+//            return .all
+//        }
+//    }
+    
+    override var shouldAutorotate: Bool{
+        return true
     }
 
     override var prefersStatusBarHidden: Bool {
