@@ -10,7 +10,7 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
-    // Tes
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

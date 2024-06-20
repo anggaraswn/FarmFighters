@@ -17,6 +17,8 @@ class GameScene: SKScene {
     var player1: Player = Player(characters: [])
     var player2: Player = Player(characters: [])
     
+    var hasTurnIncremented: Bool = false
+    
     var characters = [String: Character]()
     
     var orange: Orange?
@@ -86,9 +88,9 @@ class GameScene: SKScene {
         physicsWorld.contactDelegate = self
         
         // Setup the boundaries
-        boundary.physicsBody = SKPhysicsBody(edgeLoopFrom: CGRect(origin: .zero, size: size))
-        boundary.position = .zero
-        addChild(boundary)
+//        boundary.physicsBody = SKPhysicsBody(edgeLoopFrom: CGRect(origin: .zero, size: size))
+//        boundary.position = .zero
+//        addChild(boundary)
         
         setUpCharacter()
         
@@ -166,9 +168,6 @@ class GameScene: SKScene {
                 bom?.position = location
                 addChild(bom!)
             }
-            // Increment the turn
-            turn += 1
-            print("Turn increased to \(turn)")
             
             // Store the location of the touch
             touchStart = location
@@ -304,9 +303,11 @@ class GameScene: SKScene {
         case .orange:
             orange?.physicsBody?.isDynamic = true
             orange?.physicsBody?.applyImpulse(vector)
+            hasTurnIncremented = false // Reset the flag when orange is thrown
         case .bom:
             bom?.physicsBody?.isDynamic = true
             bom?.physicsBody?.applyImpulse(vector)
+            hasTurnIncremented = false // Reset the flag when bom is thrown
         }
         
         // Set the orange shot flag to true
@@ -365,20 +366,20 @@ class GameScene: SKScene {
         isNodeReadyToMove = false
     }
     
-    //    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-    //        if let node = selectedNode {
-    //            node.alpha = 1.0
-    //        }
-    //        selectedNode = nil
-    //        touchStartTime = nil
-    //        isNodeReadyToMove = false
-    //    }
-    
     override func update(_ currentTime: TimeInterval) {
         if isOrangeShot {
-            if let weapon = orange != nil ? orange : bom   {
-                //                print("\(weapon.physicsBody!.velocity.dx)")
+            if let weapon = orange != nil ? orange : bom {
                 // Check if the orange velocity is near zero
+                if abs(weapon.physicsBody!.velocity.dx) > 0 && abs(weapon.physicsBody!.velocity.dy) > 0 {
+                    // Check if the orange is on the ground or has come to a stop (you may need to adjust this condition based on your game)
+                    // Remove the orange and move the camera
+                    if !hasTurnIncremented {
+                        turn += 1
+                        print("Turn increased to \(turn)")
+                        hasTurnIncremented = true // Set the flag to true to prevent further increments
+                    }
+                }
+               
                 if abs(weapon.physicsBody!.velocity.dx) < 200 && abs(weapon.physicsBody!.velocity.dy) < 200 {
                     // Check if the orange is on the ground or has come to a stop (you may need to adjust this condition based on your game)
                     // Remove the orange and move the camera
@@ -386,17 +387,17 @@ class GameScene: SKScene {
                 }
             }
         }
-        
+
         // Update the camera position to follow the orange
         if let weapon = orange != nil ? orange : bom {
             // Ensure the camera stays within the scene bounds
             let cameraX = clamp(value: weapon.position.x, lower: size.width / 4, upper: size.width - size.width / 4)
             cameraNode.position = CGPoint(x: cameraX, y: size.height / 2)
-            
+
             // Ensure the orange stays within the scene bounds
             weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
             weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
-            
+
             // Check if the orange has stopped moving and has been shot
             if isOrangeShot && weapon.physicsBody?.velocity == CGVector(dx: 0, dy: 0) {
                 if orangeStoppedTime == nil {
@@ -409,10 +410,10 @@ class GameScene: SKScene {
                 orangeStoppedTime = nil
             }
         }
-        
+
         if let touchStartTime = touchStartTime, let character = selectedCharacter {
             let touchDuration = currentTime - touchStartTime
-            
+
             if touchDuration >= 3.0 && token > 0 {
                 isNodeReadyToMove = true
                 character.alpha = 0.5
@@ -420,6 +421,7 @@ class GameScene: SKScene {
             }
         }
     }
+
     
     func moveCameraAndRemoveOrange() {
         // Determine the new camera position based on the turn
@@ -462,42 +464,47 @@ class GameScene: SKScene {
         return min(max(value, lower), upper)
     }
     
+    func resetGame() {
+        // Reset player characters and any other necessary game state
+        player1.characters = []
+        player2.characters = []
+    }
+
+    
+    func checkEndGame() {
+        if player1.characters.isEmpty {
+            player2.winningRound += 1
+            
+            // ini reset game masih ga jalan
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.resetGame()
+            }
+        } else if player1.characters.isEmpty {
+            player1.winningRound += 1
+            
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.resetGame()
+            }
+        }
+    }
+
+    
     func reduceLife(character: Character) {
         character.health -= 0.5
         
         if character.health <= 0 {
             characters.removeValue(forKey: character.name ?? "")
             character.removeFromParent()
+            
+            if let index = player1.characters.firstIndex(where: { $0.name == character.name }) {
+                player1.characters.remove(at: index)
+            } else if let index = player2.characters.firstIndex(where: { $0.name == character.name }) {
+                player2.characters.remove(at: index)
+            }
+            
+            checkEndGame() // Check if this was the last character for any player
         }
-        
-        
-        //        lifeTroops -= 1
-        //        if lifeTroops <= 0 {
-        //            lifeTroops = 0
-        //        }
-        //        lifeNodes[lifeTroops].texture = SKTexture(imageNamed: "heart-off")
-        
-        //===
-        
-        //        if lifeTroops <= 0 {
-        //            lifeTroops = 0
-        //            return
-        //        }
-        //
-        //        // Calculate the index based on current lifeTroops, starting from right to left
-        //        let index = lifeTroops - 1
-        //        let currentNode = lifeNodes[index]
-        //
-        //        // Check the current texture of the node
-        //        if currentNode.texture?.description.contains("heart-half") == true {
-        //            // If already "heart-half", change it to "heart-off" and decrement lifeTroops
-        //            currentNode.texture = SKTexture(imageNamed: "heart-off")
-        //            lifeTroops -= 1
-        //        } else {
-        //            // If not "heart-half", change it to "heart-half" now
-        //            currentNode.texture = SKTexture(imageNamed: "heart-half")
-        //        }
-        //
     }
 }
 
