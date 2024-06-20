@@ -15,6 +15,8 @@
 		BF09EEDA2C231C7000421911 /* bom.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EED92C231C7000421911 /* bom.png */; };
 		BF09EEDC2C231C7700421911 /* bomButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EEDB2C231C7700421911 /* bomButton.png */; };
 		BF09EEDE2C231C8A00421911 /* Bom.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EEDD2C231C8A00421911 /* Bom.swift */; };
+		BF09EEE02C23236700421911 /* ayam level 1.json in Resources */ = {isa = PBXBuildFile; fileRef = BF09EEDF2C23236700421911 /* ayam level 1.json */; };
+		BF09EEE22C23236E00421911 /* duck level 1.json in Resources */ = {isa = PBXBuildFile; fileRef = BF09EEE12C23236E00421911 /* duck level 1.json */; };
 		BF4C7CAD2C22826200F5E695 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CAC2C22826200F5E695 /* AppDelegate.swift */; };
 		BF4C7CB82C22826200F5E695 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CB62C22826200F5E695 /* Main.storyboard */; };
 		BF4C7CBA2C22826300F5E695 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CB92C22826300F5E695 /* Assets.xcassets */; };
@@ -49,6 +51,8 @@
 		BF09EED92C231C7000421911 /* bom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bom.png; sourceTree = "<group>"; };
 		BF09EEDB2C231C7700421911 /* bomButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bomButton.png; sourceTree = "<group>"; };
 		BF09EEDD2C231C8A00421911 /* Bom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bom.swift; sourceTree = "<group>"; };
+		BF09EEDF2C23236700421911 /* ayam level 1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "ayam level 1.json"; sourceTree = "<group>"; };
+		BF09EEE12C23236E00421911 /* duck level 1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "duck level 1.json"; sourceTree = "<group>"; };
 		BF4C7CA92C22826200F5E695 /* FarmFighters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarmFighters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF4C7CAC2C22826200F5E695 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF4C7CB72C22826200F5E695 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -154,6 +158,8 @@
 		BF4C7CC92C2282A300F5E695 /* Level-1 */ = {
 			isa = PBXGroup;
 			children = (
+				BF09EEDF2C23236700421911 /* ayam level 1.json */,
+				BF09EEE12C23236E00421911 /* duck level 1.json */,
 				BF4C7CCA2C2282A300F5E695 /* duck.png */,
 				BF4C7CCB2C2282A300F5E695 /* background-left.png */,
 				BF4C7CCC2C2282A300F5E695 /* ground-right.png */,
@@ -180,6 +186,8 @@
 			dependencies = (
 			);
 			name = FarmFighters;
+			packageProductDependencies = (
+			);
 			productName = FarmFighters;
 			productReference = BF4C7CA92C22826200F5E695 /* FarmFighters.app */;
 			productType = "com.apple.product-type.application";
@@ -208,6 +216,8 @@
 				Base,
 			);
 			mainGroup = BF4C7CA02C22826200F5E695;
+			packageReferences = (
+			);
 			productRefGroup = BF4C7CAA2C22826200F5E695 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -237,9 +247,11 @@
 				BF4C7CBA2C22826300F5E695 /* Assets.xcassets in Resources */,
 				BF4C7CD72C2282A300F5E695 /* apple.png in Resources */,
 				BF4C7CBD2C22826300F5E695 /* LaunchScreen.storyboard in Resources */,
+				BF09EEE22C23236E00421911 /* duck level 1.json in Resources */,
 				BF4C7CDF2C2282A300F5E695 /* heart-half.png in Resources */,
 				BF4C7CDE2C2282A300F5E695 /* Ground.png in Resources */,
 				BF4C7CE32C2282AF00F5E695 /* GameScene.sks in Resources */,
+				BF09EEE02C23236700421911 /* ayam level 1.json in Resources */,
 				BF09EED82C231C6800421911 /* OrangeButton.png in Resources */,
 				BF4C7CDD2C2282A300F5E695 /* ground-left.png in Resources */,
 				BF09EEDC2C231C7700421911 /* bomButton.png in Resources */,

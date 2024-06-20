@@ -420,6 +420,7 @@ class GameScene: SKScene {
             }
         }
     }
+    // Add comment 2
     
     func moveCameraAndRemoveOrange() {
         // Determine the new camera position based on the turn
