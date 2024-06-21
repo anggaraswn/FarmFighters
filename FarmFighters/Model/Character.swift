@@ -7,43 +7,37 @@
 
 import SpriteKit
 
-class Character: SKSpriteNode{
+class Character{
     var health: Double = 1{
         didSet{
             updateHealth()
         }
     }
     var heart: SKSpriteNode
-
+    var node: SKSpriteNode
+    private var _position: CGPoint
     
-    init(node:SKNode, scene: SKScene) {
-        let texture = SKTexture(imageNamed: String(node.name?.dropLast() ?? ""))
-        let size = CGSize(width: 248, height: 351)
-        let color = UIColor.clear
-        
-        heart = SKSpriteNode(imageNamed: "heart-on")
-        
-        super.init(texture: texture, color: color, size: size)
-        self.position = node.position
-        self.name = node.name
-        
-        heart.setScale(0.5)
-        heart.position = CGPoint(x: position.x, y: position.y + 220)
-        
-        
-        scene.addChild(heart)
-        
-        physicsBody = SKPhysicsBody(texture: texture, size: size)
-        physicsBody!.isDynamic = false
-        physicsBody!.allowsRotation = false
-        physicsBody!.pinned = false
-        physicsBody!.affectedByGravity = true
+    var position: CGPoint {
+        get {
+            return _position
+        }
+        set {
+            _position = newValue
+            node.position = newValue
+            heart.position = CGPoint(x: newValue.x, y: newValue.y + 220)
+        }
     }
     
-    override var position: CGPoint{
-        didSet{
-            heart.position = CGPoint(x: position.x, y: position.y + 220)
-        }
+    
+    init(node: SKSpriteNode, scene: SKScene) {
+        self.node = node
+        self._position = node.position
+        heart = SKSpriteNode(imageNamed: "heart-on")
+        heart.setScale(0.5)
+        heart.position = CGPoint(x: _position.x, y: _position.y + 220)
+        heart.zPosition = 1
+        
+        scene.addChild(heart)
     }
     
     private func updateHealth(){

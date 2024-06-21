@@ -14,7 +14,6 @@
 		BF09EED82C231C6800421911 /* OrangeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EED72C231C6800421911 /* OrangeButton.png */; };
 		BF09EEDA2C231C7000421911 /* bom.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EED92C231C7000421911 /* bom.png */; };
 		BF09EEDC2C231C7700421911 /* bomButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EEDB2C231C7700421911 /* bomButton.png */; };
-		BF09EEDE2C231C8A00421911 /* Bom.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EEDD2C231C8A00421911 /* Bom.swift */; };
 		BF4C7CAD2C22826200F5E695 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CAC2C22826200F5E695 /* AppDelegate.swift */; };
 		BF4C7CB82C22826200F5E695 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CB62C22826200F5E695 /* Main.storyboard */; };
 		BF4C7CBA2C22826300F5E695 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CB92C22826300F5E695 /* Assets.xcassets */; };
@@ -36,7 +35,6 @@
 		BF4C7CE32C2282AF00F5E695 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CE12C2282AF00F5E695 /* GameScene.sks */; };
 		BF4C7CE42C2282AF00F5E695 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CE22C2282AF00F5E695 /* GameScene.swift */; };
 		BF4C7CE72C2282BB00F5E695 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */; };
-		BF4C7CE82C2282BB00F5E695 /* Orange.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CE62C2282BB00F5E695 /* Orange.swift */; };
 		BF4C7CEA2C2282C200F5E695 /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +46,6 @@
 		BF09EED72C231C6800421911 /* OrangeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrangeButton.png; sourceTree = "<group>"; };
 		BF09EED92C231C7000421911 /* bom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bom.png; sourceTree = "<group>"; };
 		BF09EEDB2C231C7700421911 /* bomButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bomButton.png; sourceTree = "<group>"; };
-		BF09EEDD2C231C8A00421911 /* Bom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bom.swift; sourceTree = "<group>"; };
 		BF4C7CA92C22826200F5E695 /* FarmFighters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarmFighters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF4C7CAC2C22826200F5E695 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF4C7CB72C22826200F5E695 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -71,7 +68,6 @@
 		BF4C7CE12C2282AF00F5E695 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		BF4C7CE22C2282AF00F5E695 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		BF4C7CE62C2282BB00F5E695 /* Orange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Orange.swift; sourceTree = "<group>"; };
 		BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,8 +118,6 @@
 				BF4C7CE12C2282AF00F5E695 /* GameScene.sks */,
 				BF4C7CE22C2282AF00F5E695 /* GameScene.swift */,
 				BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */,
-				BF4C7CE62C2282BB00F5E695 /* Orange.swift */,
-				BF09EEDD2C231C8A00421911 /* Bom.swift */,
 				BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */,
 				BF4C7CB62C22826200F5E695 /* Main.storyboard */,
 				BF4C7CB92C22826300F5E695 /* Assets.xcassets */,
@@ -257,9 +251,7 @@
 				BF4C7CE42C2282AF00F5E695 /* GameScene.swift in Sources */,
 				BF4C7CE72C2282BB00F5E695 /* GameViewController.swift in Sources */,
 				BF4C7CEA2C2282C200F5E695 /* PhysicsCategory.swift in Sources */,
-				BF09EEDE2C231C8A00421911 /* Bom.swift in Sources */,
 				BF4C7CAD2C22826200F5E695 /* AppDelegate.swift in Sources */,
-				BF4C7CE82C2282BB00F5E695 /* Orange.swift in Sources */,
 				BF09EED02C22C0D400421911 /* Weapon.swift in Sources */,
 				BF09EED62C22C4A100421911 /* Player.swift in Sources */,
 				BF09EED42C22C41300421911 /* Character.swift in Sources */,

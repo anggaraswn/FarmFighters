@@ -8,14 +8,17 @@
 import SpriteKit
 
 class Weapon: SKSpriteNode{
-    var damage: Int
+    var damage: Double
+    var type: WeaponType
+    var playerTurn: PlayerTurn
     
-    init(texture: String, damage: Int) {
-        self.damage = damage
-        let texture = SKTexture(imageNamed: texture)
+    init(type: WeaponType, playerTurn: PlayerTurn) {
+        self.type = type
+        self.playerTurn = playerTurn
+        self.damage = type == .orange ? 0.5 : 1
+        let texture = SKTexture(imageNamed: type == .orange ? "Orange" : "bom")
         let size = texture.size()
         let color = UIColor.clear
-        
         super.init(texture: texture, color: color, size: size)
         
         physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)

@@ -13,8 +13,10 @@ class Player{
     var characters: [Character]
     var numberOfBombs: Int = 1
     var winningRound: Int = 0
+    var turn: PlayerTurn
     
-    init(characters: [Character]) {
+    init(characters: [Character], turn: PlayerTurn) {
         self.characters = characters
+        self.turn = turn
     }
 }
