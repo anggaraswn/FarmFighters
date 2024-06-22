@@ -14,6 +14,16 @@
 		BF09EED82C231C6800421911 /* OrangeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EED72C231C6800421911 /* OrangeButton.png */; };
 		BF09EEDA2C231C7000421911 /* bom.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EED92C231C7000421911 /* bom.png */; };
 		BF09EEDC2C231C7700421911 /* bomButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EEDB2C231C7700421911 /* bomButton.png */; };
+		BF2E4CC92C26FC8C006E7D18 /* background-mid.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC32C26FC8C006E7D18 /* background-mid.png */; };
+		BF2E4CCA2C26FC8C006E7D18 /* ground-left.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC42C26FC8C006E7D18 /* ground-left.png */; };
+		BF2E4CCB2C26FC8C006E7D18 /* ground-right.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC52C26FC8C006E7D18 /* ground-right.png */; };
+		BF2E4CCC2C26FC8C006E7D18 /* background-left.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC62C26FC8C006E7D18 /* background-left.png */; };
+		BF2E4CCD2C26FC8C006E7D18 /* background-right.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC72C26FC8C006E7D18 /* background-right.png */; };
+		BF2E4CCE2C26FC8C006E7D18 /* ground-mid.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC82C26FC8C006E7D18 /* ground-mid.png */; };
+		BF2E4CD52C26FD09006E7D18 /* potato.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CD12C26FD09006E7D18 /* potato.png */; };
+		BF2E4CD62C26FD09006E7D18 /* potato-bomb.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CD22C26FD09006E7D18 /* potato-bomb.png */; };
+		BF2E4CD72C26FD09006E7D18 /* tomato-bomb.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CD32C26FD09006E7D18 /* tomato-bomb.png */; };
+		BF2E4CD82C26FD09006E7D18 /* tomato.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CD42C26FD09006E7D18 /* tomato.png */; };
 		BF4C7CAD2C22826200F5E695 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CAC2C22826200F5E695 /* AppDelegate.swift */; };
 		BF4C7CB82C22826200F5E695 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CB62C22826200F5E695 /* Main.storyboard */; };
 		BF4C7CBA2C22826300F5E695 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CB92C22826300F5E695 /* Assets.xcassets */; };
@@ -24,11 +34,7 @@
 		BF4C7CD62C2282A300F5E695 /* Orange.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CC72C2282A300F5E695 /* Orange.png */; };
 		BF4C7CD72C2282A300F5E695 /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CC82C2282A300F5E695 /* apple.png */; };
 		BF4C7CD82C2282A300F5E695 /* duck.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CCA2C2282A300F5E695 /* duck.png */; };
-		BF4C7CD92C2282A300F5E695 /* background-left.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CCB2C2282A300F5E695 /* background-left.png */; };
-		BF4C7CDA2C2282A300F5E695 /* ground-right.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CCC2C2282A300F5E695 /* ground-right.png */; };
 		BF4C7CDB2C2282A300F5E695 /* chicken.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CCD2C2282A300F5E695 /* chicken.png */; };
-		BF4C7CDC2C2282A300F5E695 /* background-right.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CCE2C2282A300F5E695 /* background-right.png */; };
-		BF4C7CDD2C2282A300F5E695 /* ground-left.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CCF2C2282A300F5E695 /* ground-left.png */; };
 		BF4C7CDE2C2282A300F5E695 /* Ground.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CD02C2282A300F5E695 /* Ground.png */; };
 		BF4C7CDF2C2282A300F5E695 /* heart-half.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CD12C2282A300F5E695 /* heart-half.png */; };
 		BF4C7CE02C2282A300F5E695 /* heart-off.png in Resources */ = {isa = PBXBuildFile; fileRef = BF4C7CD22C2282A300F5E695 /* heart-off.png */; };
@@ -46,6 +52,16 @@
 		BF09EED72C231C6800421911 /* OrangeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrangeButton.png; sourceTree = "<group>"; };
 		BF09EED92C231C7000421911 /* bom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bom.png; sourceTree = "<group>"; };
 		BF09EEDB2C231C7700421911 /* bomButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bomButton.png; sourceTree = "<group>"; };
+		BF2E4CC32C26FC8C006E7D18 /* background-mid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-mid.png"; sourceTree = "<group>"; };
+		BF2E4CC42C26FC8C006E7D18 /* ground-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ground-left.png"; sourceTree = "<group>"; };
+		BF2E4CC52C26FC8C006E7D18 /* ground-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ground-right.png"; sourceTree = "<group>"; };
+		BF2E4CC62C26FC8C006E7D18 /* background-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-left.png"; sourceTree = "<group>"; };
+		BF2E4CC72C26FC8C006E7D18 /* background-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-right.png"; sourceTree = "<group>"; };
+		BF2E4CC82C26FC8C006E7D18 /* ground-mid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ground-mid.png"; sourceTree = "<group>"; };
+		BF2E4CD12C26FD09006E7D18 /* potato.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = potato.png; sourceTree = "<group>"; };
+		BF2E4CD22C26FD09006E7D18 /* potato-bomb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "potato-bomb.png"; sourceTree = "<group>"; };
+		BF2E4CD32C26FD09006E7D18 /* tomato-bomb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tomato-bomb.png"; sourceTree = "<group>"; };
+		BF2E4CD42C26FD09006E7D18 /* tomato.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tomato.png; sourceTree = "<group>"; };
 		BF4C7CA92C22826200F5E695 /* FarmFighters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarmFighters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF4C7CAC2C22826200F5E695 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF4C7CB72C22826200F5E695 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -57,11 +73,7 @@
 		BF4C7CC72C2282A300F5E695 /* Orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Orange.png; sourceTree = "<group>"; };
 		BF4C7CC82C2282A300F5E695 /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
 		BF4C7CCA2C2282A300F5E695 /* duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = duck.png; sourceTree = "<group>"; };
-		BF4C7CCB2C2282A300F5E695 /* background-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-left.png"; sourceTree = "<group>"; };
-		BF4C7CCC2C2282A300F5E695 /* ground-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ground-right.png"; sourceTree = "<group>"; };
 		BF4C7CCD2C2282A300F5E695 /* chicken.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chicken.png; sourceTree = "<group>"; };
-		BF4C7CCE2C2282A300F5E695 /* background-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-right.png"; sourceTree = "<group>"; };
-		BF4C7CCF2C2282A300F5E695 /* ground-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ground-left.png"; sourceTree = "<group>"; };
 		BF4C7CD02C2282A300F5E695 /* Ground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ground.png; sourceTree = "<group>"; };
 		BF4C7CD12C2282A300F5E695 /* heart-half.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart-half.png"; sourceTree = "<group>"; };
 		BF4C7CD22C2282A300F5E695 /* heart-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart-off.png"; sourceTree = "<group>"; };
@@ -91,6 +103,17 @@
 				BF09EED52C22C4A100421911 /* Player.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		BF2E4CD02C26FCFD006E7D18 /* Weapons */ = {
+			isa = PBXGroup;
+			children = (
+				BF2E4CD12C26FD09006E7D18 /* potato.png */,
+				BF2E4CD22C26FD09006E7D18 /* potato-bomb.png */,
+				BF2E4CD42C26FD09006E7D18 /* tomato.png */,
+				BF2E4CD32C26FD09006E7D18 /* tomato-bomb.png */,
+			);
+			path = Weapons;
 			sourceTree = "<group>";
 		};
 		BF4C7CA02C22826200F5E695 = {
@@ -129,6 +152,7 @@
 		BF4C7CC32C2282A300F5E695 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				BF2E4CD02C26FCFD006E7D18 /* Weapons */,
 				BF09EED72C231C6800421911 /* OrangeButton.png */,
 				BF09EED92C231C7000421911 /* bom.png */,
 				BF09EEDB2C231C7700421911 /* bomButton.png */,
@@ -149,11 +173,13 @@
 			isa = PBXGroup;
 			children = (
 				BF4C7CCA2C2282A300F5E695 /* duck.png */,
-				BF4C7CCB2C2282A300F5E695 /* background-left.png */,
-				BF4C7CCC2C2282A300F5E695 /* ground-right.png */,
 				BF4C7CCD2C2282A300F5E695 /* chicken.png */,
-				BF4C7CCE2C2282A300F5E695 /* background-right.png */,
-				BF4C7CCF2C2282A300F5E695 /* ground-left.png */,
+				BF2E4CC62C26FC8C006E7D18 /* background-left.png */,
+				BF2E4CC32C26FC8C006E7D18 /* background-mid.png */,
+				BF2E4CC72C26FC8C006E7D18 /* background-right.png */,
+				BF2E4CC42C26FC8C006E7D18 /* ground-left.png */,
+				BF2E4CC82C26FC8C006E7D18 /* ground-mid.png */,
+				BF2E4CC52C26FC8C006E7D18 /* ground-right.png */,
 			);
 			path = "Level-1";
 			sourceTree = "<group>";
@@ -217,25 +243,31 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF4C7CD32C2282A300F5E695 /* apple-bomb.png in Resources */,
+				BF2E4CD52C26FD09006E7D18 /* potato.png in Resources */,
+				BF2E4CD62C26FD09006E7D18 /* potato-bomb.png in Resources */,
 				BF4C7CD62C2282A300F5E695 /* Orange.png in Resources */,
-				BF4C7CDC2C2282A300F5E695 /* background-right.png in Resources */,
 				BF4C7CD82C2282A300F5E695 /* duck.png in Resources */,
-				BF4C7CDA2C2282A300F5E695 /* ground-right.png in Resources */,
 				BF4C7CD52C2282A300F5E695 /* background.png in Resources */,
-				BF4C7CD92C2282A300F5E695 /* background-left.png in Resources */,
 				BF4C7CE02C2282A300F5E695 /* heart-off.png in Resources */,
+				BF2E4CCB2C26FC8C006E7D18 /* ground-right.png in Resources */,
 				BF09EEDA2C231C7000421911 /* bom.png in Resources */,
 				BF4C7CB82C22826200F5E695 /* Main.storyboard in Resources */,
 				BF4C7CDB2C2282A300F5E695 /* chicken.png in Resources */,
+				BF2E4CCA2C26FC8C006E7D18 /* ground-left.png in Resources */,
+				BF2E4CC92C26FC8C006E7D18 /* background-mid.png in Resources */,
 				BF4C7CD42C2282A300F5E695 /* heart-on.png in Resources */,
 				BF4C7CBA2C22826300F5E695 /* Assets.xcassets in Resources */,
 				BF4C7CD72C2282A300F5E695 /* apple.png in Resources */,
+				BF2E4CCD2C26FC8C006E7D18 /* background-right.png in Resources */,
+				BF2E4CCC2C26FC8C006E7D18 /* background-left.png in Resources */,
+				BF2E4CD72C26FD09006E7D18 /* tomato-bomb.png in Resources */,
 				BF4C7CBD2C22826300F5E695 /* LaunchScreen.storyboard in Resources */,
 				BF4C7CDF2C2282A300F5E695 /* heart-half.png in Resources */,
 				BF4C7CDE2C2282A300F5E695 /* Ground.png in Resources */,
 				BF4C7CE32C2282AF00F5E695 /* GameScene.sks in Resources */,
+				BF2E4CCE2C26FC8C006E7D18 /* ground-mid.png in Resources */,
 				BF09EED82C231C6800421911 /* OrangeButton.png in Resources */,
-				BF4C7CDD2C2282A300F5E695 /* ground-left.png in Resources */,
+				BF2E4CD82C26FD09006E7D18 /* tomato.png in Resources */,
 				BF09EEDC2C231C7700421911 /* bomButton.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
