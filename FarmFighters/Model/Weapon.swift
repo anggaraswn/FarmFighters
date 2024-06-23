@@ -18,7 +18,7 @@ class Weapon: SKSpriteNode{
         self.damage = type == .orange ? 0.5 : 1
         let texture = playerTurn == .player1 ? SKTexture(imageNamed: type == .orange ? "potato" : "potato-bomb") : SKTexture(imageNamed: type == .orange ? "tomato" : "tomato-bomb")
         //        let texture = SKTexture(imageNamed: type == .orange ? "Orange" : "bom")
-        let size = CGSize(width: 150, height: 150)
+        let size = CGSize(width: 150, height: 260)
         let color = UIColor.clear
         super.init(texture: texture, color: color, size: size)
         

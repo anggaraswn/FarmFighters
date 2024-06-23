@@ -354,7 +354,7 @@ class GameScene: SKScene {
     }
     
     func reduceLife(character: Character) {
-        character.health -= 0.5
+        character.health -= weapon!.damage
         
         if character.health <= 0 {
             characters.removeValue(forKey: character.node.name ?? "")
