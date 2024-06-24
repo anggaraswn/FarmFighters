@@ -23,6 +23,9 @@ class GameScene: SKScene {
     var player2: Player = Player(characters: [], turn: .player2)
     
     var characters = [String: Character]()
+    var obstacles = [String: Obstacle]()
+    var draggingStartTime: TimeInterval?
+    var draggingTimer: Timer?
     
     var weapon: Weapon?
     var touchStart: CGPoint = .zero
@@ -68,6 +71,7 @@ class GameScene: SKScene {
         // Set the contact delegate
         physicsWorld.contactDelegate = self
         
+        setUpObstacle()
         setUpCharacter()
         
         cancelIcon = SKSpriteNode(imageNamed: "cancelIcon")
@@ -116,7 +120,7 @@ class GameScene: SKScene {
             initialNodePosition = character.position
             touchStartTime = touch.timestamp
             isNodeReadyToMove = false
-        }else{
+        } else {
             // Check if the touch was on any of the weapon buttons
             for button in orangeButton {
                 if button.contains(location) {
@@ -131,6 +135,11 @@ class GameScene: SKScene {
                     break
                 }
             }
+        }
+        
+        draggingStartTime = touch.timestamp
+        draggingTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
+            self?.endDraggingAndShoot()
         }
     }
     
@@ -186,6 +195,13 @@ class GameScene: SKScene {
             pathDots.removeAll()
             touchStart = .zero
         }
+        
+        if let draggingStartTime = draggingStartTime, touch.timestamp - draggingStartTime < 5.0 {
+            draggingTimer?.invalidate()
+            draggingTimer = Timer.scheduledTimer(withTimeInterval: 5.0 - (touch.timestamp - draggingStartTime), repeats: false) { [weak self] _ in
+                self?.endDraggingAndShoot()
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -194,7 +210,7 @@ class GameScene: SKScene {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        guard let character = selectedCharacter else { return }
+        guard let character = selectedCharacter, isOrangeShot else { return }
         
         if touchStart != .zero{
             // Get the difference between the start and end point as a vector
@@ -259,7 +275,48 @@ class GameScene: SKScene {
         selectedCharacter = nil
         touchStartTime = nil
         isNodeReadyToMove = false
+        
+        draggingTimer?.invalidate()
+        draggingTimer = nil
+        draggingStartTime = nil
     }
+    
+    func endDraggingAndShoot() {
+        // Get the current position of the weapon
+        guard let weapon = weapon else { return }
+        let currentLocation = weapon.position
+
+        // Get the difference between the start and current point as a vector
+        let dx = (touchStart.x - currentLocation.x) * 0.4
+        let dy = (touchStart.y - currentLocation.y) * 0.4
+
+        let vector = CGVector(dx: dx, dy: dy)
+
+        // Set the weapon dynamic again and apply the vector as an impulse
+        weapon.physicsBody?.isDynamic = true
+        weapon.physicsBody?.applyImpulse(vector)
+
+        // Set the orange shot flag to true
+        isOrangeShot = true
+
+        // Remove the path from shapeNode
+        shapeNode.path = nil
+
+        // Remove any remaining dots
+        for dot in pathDots {
+            dot.removeFromParent()
+        }
+        pathDots.removeAll()
+
+        // Invalidate the dragging timer
+        draggingTimer?.invalidate()
+        draggingTimer = nil
+        draggingStartTime = nil
+
+        // Switch player turns
+//        playerTurn = playerTurn == .player1 ? .player2 : .player1
+    }
+
     
     override func update(_ currentTime: TimeInterval) {
         // Update the camera position to follow the orange
@@ -425,6 +482,23 @@ class GameScene: SKScene {
         }
     }
     
+    func setUpObstacle(){
+        let obsNames = ["obstacle1", "obstacle2", "obstacle3", "obstacle4"]
+        for name in obsNames{
+            if let node = childNode(withName: name) as? SKSpriteNode{ //assign as SKSpriteNode
+                
+    
+                let obstacle = Obstacle(node: node) // new instance of the Obstacle class
+                obstacle.node.physicsBody!.categoryBitMask = PhysicsCategory.Obstacle
+                obstacle.node.physicsBody!.contactTestBitMask = PhysicsCategory.Orange
+                obstacle.node.physicsBody!.collisionBitMask = PhysicsCategory.Orange
+                obstacle.node.zPosition = 1
+                
+                obstacles[name] = obstacle
+            }
+        }
+    }
+    
     func createButtons() {
         // Create first set of buttons
         let orangeTexture = SKTexture(imageNamed: "OrangeButton")
@@ -538,6 +612,18 @@ extension GameScene: SKPhysicsContactDelegate {
                     }
                 }
             }
+            
+            // obstacle
+            case PhysicsCategory.Obstacle:
+                if contact.collisionImpulse > 50{
+                    if let obstacleNode = other.node as? SKSpriteNode, let obstacle = obstacles[obstacleNode.name ?? ""] {
+                        if weapon?.type == .bom {
+                            obstacle.node.removeFromParent()
+                            obstacles.removeValue(forKey: obstacleNode.name ?? "")
+                        }
+                    }
+                }
+            
         default:
             break
         }

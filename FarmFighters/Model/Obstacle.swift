@@ -7,19 +7,30 @@
 
 import SpriteKit
 
-class Obstacle: SKSpriteNode{
-    var health: Double = 1
-    
-    init(texture: String, health: Double) {
-        let texture = SKTexture(imageNamed: texture)
-        let size = texture.size()
-        let color = UIColor.clear
+class Obstacle {
+    //    var obsHealth: Double = 1
+    //    var hits: Int = 0
+
+    var node: SKSpriteNode
+    private var _position: CGPoint
         
-        super.init(texture: texture, color: color, size: size)
-        
-        physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)
+    var position: CGPoint {
+        get {
+            return _position
+        }
+        set {
+            _position = newValue
+            node.position = newValue
+        }
     }
-    
+        
+        
+    init(node: SKSpriteNode) {
+        self.node = node
+        self._position = node.position
+    }
+        
+        
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

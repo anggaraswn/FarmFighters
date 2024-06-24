@@ -24,15 +24,15 @@ class Weapon: SKSpriteNode{
         
         
         physicsBody = SKPhysicsBody(texture: texture, size: CGSize(width: 150, height: 150))
-        physicsBody?.isDynamic = false
+        physicsBody?.isDynamic = true
         physicsBody?.allowsRotation = true
         physicsBody?.affectedByGravity = true
         physicsBody?.mass = 0.3
         physicsBody?.density = 0.3
         
         physicsBody?.categoryBitMask = PhysicsCategory.Orange
-        physicsBody?.collisionBitMask = PhysicsCategory.Character
-        physicsBody?.contactTestBitMask = PhysicsCategory.Character
+        physicsBody?.collisionBitMask = PhysicsCategory.Obstacle | PhysicsCategory.Character
+        physicsBody?.contactTestBitMask = PhysicsCategory.Obstacle | PhysicsCategory.Character
     }
     
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented")
