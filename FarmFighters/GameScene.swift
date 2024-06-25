@@ -19,30 +19,28 @@ enum PlayerTurn {
 }
 
 class GameScene: SKScene {
+    var round: Int = 1
+    
     var player1: Player = Player(characters: [], turn: .player1)
     var player2: Player = Player(characters: [], turn: .player2)
     
     var characters = [String: Character]()
     var obstacles = [String: Obstacle]()
-    var draggingStartTime: TimeInterval?
-    var draggingTimer: Timer?
     
     var weapon: Weapon?
     var touchStart: CGPoint = .zero
+    var touchStartTime: TimeInterval?
     var shapeNode = SKShapeNode()
     var pathDots = [SKShapeNode]() // Array to hold the dot nodes
     let maxDragDistance: CGFloat = 150.0
-    var playerTurn: PlayerTurn = .player1{
-        didSet{
-            // Disable shooting
-            canShoot = false
-        }
-    }
+    var playerTurn: PlayerTurn = .player1
     
     var selectedCharacter: Character?
-    var touchStartTime: TimeInterval?
     var isNodeReadyToMove = false {
         didSet{
+            let position: CGPoint = playerTurn == .player2 ? opponentCameraPosition : initialCameraPosition
+            cancelIcon.position = position
+            cancelIcon.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             cancelIcon.isHidden = !isNodeReadyToMove
         }
     }
@@ -60,9 +58,14 @@ class GameScene: SKScene {
     var opponentCameraPosition: CGPoint = .zero
     var orangeStoppedTime: TimeInterval?
     var isOrangeShot = false
-    var canShoot = true
+    var timeLabel: SKLabelNode!
+    
+    static func loadRound(round: Int) -> GameScene? {
+        return GameScene(fileNamed: "Round-\(round)")
+    }
     
     override func didMove(to view: SKView) {
+        print("Called")
         shapeNode.lineWidth = 40
         shapeNode.lineCap = .round
         shapeNode.strokeColor = UIColor(white: 1, alpha: 0.3)
@@ -76,7 +79,6 @@ class GameScene: SKScene {
         
         cancelIcon = SKSpriteNode(imageNamed: "cancelIcon")
         cancelIcon.name = "cancelIcon"
-        cancelIcon.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         cancelIcon.isHidden = true // Hide the cancel icon initially
         addChild(cancelIcon)
         
@@ -93,13 +95,19 @@ class GameScene: SKScene {
         
         // Create and position the buttons
         createButtons()
+        timeLabel = childNode(withName: "time") as? SKLabelNode
+        
+        let roundText = displayImage(imageNamed: "round-r\(round)", anchorPoint: CGPoint(x: 0.5, y: 0.5))
+        Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
+            roundText.removeFromParent()
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        if let node = atPoint(location) as? SKSpriteNode, let nodeName = node.name, let character = characters[nodeName], canShoot{
+        if let node = atPoint(location) as? SKSpriteNode, let nodeName = node.name, let character = characters[nodeName], !isOrangeShot{
             
             node.physicsBody = nil
             
@@ -120,6 +128,7 @@ class GameScene: SKScene {
             initialNodePosition = character.position
             touchStartTime = touch.timestamp
             isNodeReadyToMove = false
+            startCountdown()
         } else {
             // Check if the touch was on any of the weapon buttons
             for button in orangeButton {
@@ -135,11 +144,6 @@ class GameScene: SKScene {
                     break
                 }
             }
-        }
-        
-        draggingStartTime = touch.timestamp
-        draggingTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
-            self?.endDraggingAndShoot()
         }
     }
     
@@ -183,24 +187,8 @@ class GameScene: SKScene {
         
         if isNodeReadyToMove {
             character.position.x = location.x
-//            character.position.y = location.y
-//            adjustCharacterPosition(character: character)
-            weapon?.removeFromParent()
-            weapon = nil
-            shapeNode.path = nil
-            isOrangeShot = false
-            for dot in pathDots {
-                dot.removeFromParent()
-            }
-            pathDots.removeAll()
-            touchStart = .zero
-        }
-        
-        if let draggingStartTime = draggingStartTime, touch.timestamp - draggingStartTime < 5.0 {
-            draggingTimer?.invalidate()
-            draggingTimer = Timer.scheduledTimer(withTimeInterval: 5.0 - (touch.timestamp - draggingStartTime), repeats: false) { [weak self] _ in
-                self?.endDraggingAndShoot()
-            }
+            //            character.position.y = location.y
+            //            adjustCharacterPosition(character: character)
         }
     }
     
@@ -210,53 +198,13 @@ class GameScene: SKScene {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        guard let character = selectedCharacter, isOrangeShot else { return }
+        timeLabel.removeAllActions()
+        timeLabel.isHidden = true
+        
+        guard let character = selectedCharacter else { return }
         
         if touchStart != .zero{
-            // Get the difference between the start and end point as a vector
-            let dx = (touchStart.x - location.x) * 0.4
-            let dy = (touchStart.y - location.y) * 0.4
-            
-            let vector = CGVector(dx: dx, dy: dy)
-            
-            // Set the weapon dynamic again and apply the vector as an impulse
-            weapon?.physicsBody?.isDynamic = true
-            weapon?.physicsBody?.applyImpulse(vector)
-            
-            // Set the orange shot flag to true
-            isOrangeShot = true
-            
-            // Remove the path from shapeNode
-            shapeNode.path = nil
-            
-            
-            // Remove any remaining dots
-            for dot in pathDots {
-                dot.removeFromParent()
-            }
-            pathDots.removeAll()
-            touchStart = .zero
-            
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                if let texture = character.node.texture {
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
-                        newPhysicsBody.isDynamic = false
-                        newPhysicsBody.allowsRotation = false
-                        newPhysicsBody.pinned = false
-                        newPhysicsBody.affectedByGravity = true
-                        newPhysicsBody.categoryBitMask = PhysicsCategory.Character
-                        newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
-                        
-                        DispatchQueue.main.async {
-                            character.node.physicsBody = newPhysicsBody
-                        }
-                    }
-                }
-            }
-            
-            playerTurn = playerTurn == .player1 ? .player2 : .player1
+            shootWeapon()
         }
         
         guard let initialPosition = initialNodePosition else {return}
@@ -275,52 +223,12 @@ class GameScene: SKScene {
         selectedCharacter = nil
         touchStartTime = nil
         isNodeReadyToMove = false
-        
-        draggingTimer?.invalidate()
-        draggingTimer = nil
-        draggingStartTime = nil
     }
     
-    func endDraggingAndShoot() {
-        // Get the current position of the weapon
-        guard let weapon = weapon else { return }
-        let currentLocation = weapon.position
-
-        // Get the difference between the start and current point as a vector
-        let dx = (touchStart.x - currentLocation.x) * 0.4
-        let dy = (touchStart.y - currentLocation.y) * 0.4
-
-        let vector = CGVector(dx: dx, dy: dy)
-
-        // Set the weapon dynamic again and apply the vector as an impulse
-        weapon.physicsBody?.isDynamic = true
-        weapon.physicsBody?.applyImpulse(vector)
-
-        // Set the orange shot flag to true
-        isOrangeShot = true
-
-        // Remove the path from shapeNode
-        shapeNode.path = nil
-
-        // Remove any remaining dots
-        for dot in pathDots {
-            dot.removeFromParent()
-        }
-        pathDots.removeAll()
-
-        // Invalidate the dragging timer
-        draggingTimer?.invalidate()
-        draggingTimer = nil
-        draggingStartTime = nil
-
-        // Switch player turns
-//        playerTurn = playerTurn == .player1 ? .player2 : .player1
-    }
-
     
     override func update(_ currentTime: TimeInterval) {
         // Update the camera position to follow the orange
-        if !canShoot, let weapon = weapon {
+        if isOrangeShot, let weapon = weapon {
             // Check if the weapon is out of bounds
             if weapon.position.x < 0 || weapon.position.x > size.width || weapon.position.y < 0 || weapon.position.y > size.height {
                 print("Out of scene")
@@ -337,7 +245,7 @@ class GameScene: SKScene {
             weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
             
             // Check if the orange has stopped moving and has been shot
-            if isOrangeShot && abs(weapon.physicsBody!.velocity.dx) < 200 && abs(weapon.physicsBody!.velocity.dy) < 200 {
+            if abs(weapon.physicsBody!.velocity.dx) < 200 && abs(weapon.physicsBody!.velocity.dy) < 200 {
                 if orangeStoppedTime == nil {
                     orangeStoppedTime = currentTime
                 } else if currentTime - orangeStoppedTime! > 0.2 {
@@ -364,9 +272,6 @@ class GameScene: SKScene {
             self?.weapon?.removeFromParent()
             self?.weapon = nil
             self?.isOrangeShot = false
-            
-            // Enable shooting again
-            self?.canShoot = true
         }
     }
     
@@ -392,22 +297,56 @@ class GameScene: SKScene {
         player2.characters = []
     }
     
-    func checkEndGame() {
-        if player1.characters.isEmpty {
-            player2.winningRound += 1
-            
-            // ini reset game masih ga jalan
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.resetGame()
+    func checkEndRound() {
+        if player1.characters.isEmpty || player1.characters.isEmpty {
+            if player1.characters.isEmpty{
+                player2.winningRound += 1
+                _ = displayImage(imageNamed: "ducks-win", anchorPoint: CGPoint(x: 0.5, y: 0.5))
+            }else{
+                player1.winningRound += 1
+                _ = displayImage(imageNamed: "chickens-win", anchorPoint: CGPoint(x: 0.5, y: 0.5))
             }
-        } else if player1.characters.isEmpty {
-            player1.winningRound += 1
-            
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.resetGame()
+            round += 1
+            // ini reset game masih ga jalan
+//            if checkVictory(){
+//                return
+//            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                if let scene = GameScene.loadRound(round: self.round){
+                    scene.scaleMode = .aspectFill
+                    if let view = self.view {
+                        view.presentScene(scene)
+                    }
+                }
             }
         }
+    }
+    
+    func checkVictory() -> Bool{
+        if player1.winningRound == 2 || player2.winningRound == 2{
+            if player1.winningRound == 2{
+                _ = displayImage(imageNamed: "chickens-victory", anchorPoint: CGPoint(x: 0, y: 0))
+            }else{
+                _ = displayImage(imageNamed: "ducks-victory", anchorPoint: CGPoint(x: 0, y: 0))
+            }
+            
+            return true
+        }
+        
+        return false
+    }
+    
+    func displayImage(imageNamed: String, anchorPoint: CGPoint) -> SKSpriteNode{
+        let position: CGPoint = playerTurn == .player2 ? opponentCameraPosition : initialCameraPosition
+        
+        let texture = SKTexture(imageNamed: imageNamed)
+        let node = SKSpriteNode(texture: texture)
+        node.anchorPoint = anchorPoint
+        node.position = position
+        node.zPosition = 100
+        
+        addChild(node)
+        return node
     }
     
     func reduceLife(character: Character) {
@@ -423,7 +362,7 @@ class GameScene: SKScene {
                 player2.characters.remove(at: index)
             }
             
-            checkEndGame() // Check if this was the last character for any player
+            checkEndRound() // Check if this was the last character for any player
         }
     }
     
@@ -439,6 +378,17 @@ class GameScene: SKScene {
                 isNodeReadyToMove = true
                 character.node.alpha = 0.5
                 character.heart.alpha = 0.5
+                weapon?.removeFromParent()
+                weapon = nil
+                shapeNode.path = nil
+                isOrangeShot = false
+                for dot in pathDots {
+                    dot.removeFromParent()
+                }
+                pathDots.removeAll()
+                touchStart = .zero
+                timeLabel.removeAllActions()
+                timeLabel.isHidden = true
                 
                 DispatchQueue.main.asyncAfter(deadline: .now()) {
                     if let texture = character.node.texture {
@@ -450,7 +400,7 @@ class GameScene: SKScene {
                             newPhysicsBody.affectedByGravity = true
                             newPhysicsBody.categoryBitMask = PhysicsCategory.Character
                             newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
-//                            newPhysicsBody.mass = 1000000
+                            //                            newPhysicsBody.mass = 1000000
                             
                             DispatchQueue.main.async {
                                 character.node.physicsBody = newPhysicsBody
@@ -487,7 +437,7 @@ class GameScene: SKScene {
         for name in obsNames{
             if let node = childNode(withName: name) as? SKSpriteNode{ //assign as SKSpriteNode
                 
-    
+                
                 let obstacle = Obstacle(node: node) // new instance of the Obstacle class
                 obstacle.node.physicsBody!.categoryBitMask = PhysicsCategory.Obstacle
                 obstacle.node.physicsBody!.contactTestBitMask = PhysicsCategory.Orange
@@ -581,7 +531,83 @@ class GameScene: SKScene {
         
         character.position.y = groundHeight + (character.node.size.height / 2)
     }
-
+    
+    func shootWeapon() {
+        // Get the current position of the weapon
+        guard let weapon = weapon, let character = selectedCharacter else { return }
+        let currentLocation = weapon.position
+        
+        // Get the difference between the start and current point as a vector
+        let dx = (touchStart.x - currentLocation.x) * 1
+        let dy = (touchStart.y - currentLocation.y) * 1
+        
+        let vector = CGVector(dx: dx, dy: dy)
+        
+        // Set the weapon dynamic again and apply the vector as an impulse
+        weapon.physicsBody?.isDynamic = true
+        weapon.physicsBody?.applyImpulse(vector)
+        
+        // Set the orange shot flag to true
+        isOrangeShot = true
+        
+        // Remove the path from shapeNode
+        shapeNode.path = nil
+        
+        // Remove any remaining dots
+        for dot in pathDots {
+            dot.removeFromParent()
+        }
+        pathDots.removeAll()
+        touchStart = .zero
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            if let texture = character.node.texture {
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
+                    newPhysicsBody.isDynamic = false
+                    newPhysicsBody.allowsRotation = false
+                    newPhysicsBody.pinned = false
+                    newPhysicsBody.affectedByGravity = true
+                    newPhysicsBody.categoryBitMask = PhysicsCategory.Character
+                    newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
+                    
+                    DispatchQueue.main.async {
+                        character.node.physicsBody = newPhysicsBody
+                    }
+                }
+            }
+        }
+        
+        // Invalidate the dragging timer
+        //        draggingTimer?.invalidate()
+        //        draggingTimer = nil
+        //        draggingStartTime = nil
+        
+        // Switch player turns
+        playerTurn = playerTurn == .player1 ? .player2 : .player1
+    }
+    
+    func startCountdown() {
+        timeLabel.isHidden = false
+        timeLabel.text = "Time Remaining: 5"
+        
+        var countdownValue = 5
+        let countdownAction = SKAction.repeat(SKAction.sequence([
+            SKAction.run { [weak self] in
+                countdownValue -= 1
+                self?.timeLabel.text = "Time Remaining: \(countdownValue)"
+            },
+            SKAction.wait(forDuration: 1.0)
+        ]), count: 5)
+        
+        let endCountdownAction = SKAction.run { [weak self] in
+            self?.timeLabel.isHidden = true
+            self?.shootWeapon()
+        }
+        
+        timeLabel.run(SKAction.sequence([countdownAction, endCountdownAction]))
+    }
+    
 }
 
 
@@ -606,23 +632,23 @@ extension GameScene: SKPhysicsContactDelegate {
                     }
                     
                     if weapon?.playerTurn != characterPlayer.turn {
-//                        print("Weapon owned by \(weapon?.playerTurn == .player1 ? "player1" : "player2")")
-//                        print("Damaged")
+                        //                        print("Weapon owned by \(weapon?.playerTurn == .player1 ? "player1" : "player2")")
+                        //                        print("Damaged")
                         reduceLife(character: character)
                     }
                 }
             }
             
             // obstacle
-            case PhysicsCategory.Obstacle:
-                if contact.collisionImpulse > 50{
-                    if let obstacleNode = other.node as? SKSpriteNode, let obstacle = obstacles[obstacleNode.name ?? ""] {
-                        if weapon?.type == .bom {
-                            obstacle.node.removeFromParent()
-                            obstacles.removeValue(forKey: obstacleNode.name ?? "")
-                        }
+        case PhysicsCategory.Obstacle:
+            if contact.collisionImpulse > 50{
+                if let obstacleNode = other.node as? SKSpriteNode, let obstacle = obstacles[obstacleNode.name ?? ""] {
+                    if weapon?.type == .bom {
+                        obstacle.node.removeFromParent()
+                        obstacles.removeValue(forKey: obstacleNode.name ?? "")
                     }
                 }
+            }
             
         default:
             break
