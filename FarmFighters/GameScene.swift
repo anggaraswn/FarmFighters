@@ -76,6 +76,7 @@ class GameScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
+        GameScene.player1.winningRound = 1
         print("Round = \(GameScene.round)")
         shapeNode.lineWidth = 40
         shapeNode.lineCap = .round
