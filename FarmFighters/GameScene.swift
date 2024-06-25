@@ -59,7 +59,7 @@ class GameScene: SKScene {
     var isWeaponShot = false
     var isGameOver = false
     var isBombShot = false
-    var timeLabel: SKLabelNode!
+    var countdownLabel: SKSpriteNode!
     
     
     //sound + music
@@ -109,7 +109,6 @@ class GameScene: SKScene {
         
         // Create and position the buttons
         createButtons()
-        timeLabel = childNode(withName: "time") as? SKLabelNode
         
         let roundText = displayImage(imageNamed: "round-r\(GameScene.round)", anchorPoint: CGPoint(x: 0.5, y: 0.5))
         Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
@@ -237,8 +236,8 @@ class GameScene: SKScene {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        timeLabel.removeAllActions()
-        timeLabel.isHidden = true
+        countdownLabel.removeAllActions()
+        countdownLabel.removeFromParent()
         
         guard let character = selectedCharacter else { return }
         
@@ -460,8 +459,8 @@ class GameScene: SKScene {
                 }
                 pathDots.removeAll()
                 touchStart = .zero
-                timeLabel.removeAllActions()
-                timeLabel.isHidden = true
+                countdownLabel.removeAllActions()
+                countdownLabel.removeFromParent()
                 
                 if let texture = character.node.texture {
                     let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
@@ -657,26 +656,29 @@ class GameScene: SKScene {
     }
     
     func startCountdown() {
-        timeLabel.isHidden = false
-        timeLabel.position = cameraNode.position
-        timeLabel.text = "5"
-        timeLabel.zPosition = 100
-        
         var countdownValue = 5
+        let texture = SKTexture(imageNamed: "\(countdownValue)")
+        countdownLabel = SKSpriteNode(texture: texture)
+        countdownLabel.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        countdownLabel.position = CGPoint(x: cameraNode.position.x, y: cameraNode.position.y + 500)
+        countdownLabel.zPosition = 100
+        countdownLabel.setScale(0.6)
+        addChild(countdownLabel)
+        
         let countdownAction = SKAction.repeat(SKAction.sequence([
             SKAction.run { [weak self] in
+                self?.countdownLabel.texture = SKTexture(imageNamed: "\(countdownValue)")
                 countdownValue -= 1
-                self?.timeLabel.text = "\(countdownValue)"
             },
             SKAction.wait(forDuration: 1.0)
         ]), count: 5)
         
         let endCountdownAction = SKAction.run { [weak self] in
-            self?.timeLabel.isHidden = true
+            self?.countdownLabel.removeFromParent()
             self?.shootWeapon()
         }
         
-        timeLabel.run(SKAction.sequence([countdownAction, endCountdownAction]))
+        countdownLabel.run(SKAction.sequence([countdownAction, endCountdownAction]))
     }
     
 }
