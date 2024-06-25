@@ -58,6 +58,7 @@ class GameScene: SKScene {
     var orangeStoppedTime: TimeInterval?
     var isWeaponShot = false
     var isGameOver = false
+    var isBombShot = false
     var timeLabel: SKLabelNode!
     
     
@@ -148,16 +149,17 @@ class GameScene: SKScene {
             
         } else {
             // Check if the touch was on any of the weapon buttons
-            for button in orangeButton {
-                if button.contains(location) {
-                    currentWeapon = .basic
-                    break
-                }
-            }
             
             for button in bomButton {
                 if button.contains(location) {
-                    currentWeapon = .bom
+                    let currentPlayer = getCurrentPlayer()
+                    if !currentPlayer.hasUsedBom {
+                        currentWeapon = .bom
+                        currentPlayer.hasUsedBom = true
+                        button.texture = SKTexture(imageNamed: "BombAttackDead")
+                    } else {
+                        showAlert(title: "Bom Used", message: "You have already used the bom this round.")
+                    }
                     break
                 }
             }
@@ -192,6 +194,11 @@ class GameScene: SKScene {
             shapeNode.path = path.cgPath
             shapeNode.zPosition = 10
             shapeNode.isHidden = false
+            
+            if(currentWeapon == .bom){
+                isBombShot = true
+                resetWeaponToOrange()
+            }
         }
         
         guard let character = selectedCharacter else { return }
@@ -242,6 +249,24 @@ class GameScene: SKScene {
         isNodeReadyToMove = false
     }
     
+    func resetWeaponToOrange() {
+        if isBombShot {
+            // Code to set the weapon back to orange
+            currentWeapon = .basic // Assuming `orangeWeapon` is defined elsewhere in your code
+            isBombShot = false
+            isWeaponShot = false // Reset the orange shot status
+        }
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        
+        if let viewController = self.view?.window?.rootViewController {
+            viewController.present(alertController, animated: true, completion: nil)
+        }
+    }
     
     override func update(_ currentTime: TimeInterval) {
         // Update the camera position to follow the orange
@@ -473,34 +498,23 @@ class GameScene: SKScene {
     }
     
     func createButtons() {
-        // Create first set of buttons
-        let orangeTexture = SKTexture(imageNamed: "OrangeButton")
-        let orangeButton1 = SKSpriteNode(texture: orangeTexture)
-        orangeButton1.position = CGPoint(x: 100, y: 550) // Set an absolute position for the first orange button
-        orangeButton1.zPosition = 100 // Ensure it's rendered on top of other nodes
-        addChild(orangeButton1) // Add the first orange button to the scene
-        
-        let bomTexture = SKTexture(imageNamed: "bomButton")
+        let bomTexture = SKTexture(imageNamed: "BombAttack")
         let bomButton1 = SKSpriteNode(texture: bomTexture)
-        bomButton1.position = CGPoint(x: 200, y: 550) // Set an absolute position for the first bom button
+        bomButton1.position = CGPoint(x: 250, y: 130) // Set an absolute position for the first bom button
         bomButton1.zPosition = 100 // Ensure it's rendered on top of other nodes
+        bomButton1.setScale(0.09)
         addChild(bomButton1) // Add the first bom button to the scene
         
-        // Create second set of buttons
-        let orangeTexture2 = SKTexture(imageNamed: "OrangeButton")
-        let orangeButton2 = SKSpriteNode(texture: orangeTexture2)
-        orangeButton2.position = CGPoint(x: 4300, y: 550) // Set an absolute position for the second orange button
-        orangeButton2.zPosition = 100 // Ensure it's rendered on top of other nodes
-        addChild(orangeButton2) // Add the second orange button to the scene
         
-        let bomTexture2 = SKTexture(imageNamed: "bomButton")
+        let bomTexture2 = SKTexture(imageNamed: "BombAttack")
         let bomButton2 = SKSpriteNode(texture: bomTexture2)
-        bomButton2.position = CGPoint(x: 4200, y: 550) // Set an absolute position for the second bom button
+        bomButton2.position = CGPoint(x: 4800, y: 130) // Set an absolute position for the second bom button
         bomButton2.zPosition = 100 // Ensure it's rendered on top of other nodes
+        bomButton2.setScale(0.09)
         addChild(bomButton2) // Add the second bom button to the scene
         
         // Assign the class variables for later reference
-        self.orangeButton = [orangeButton1, orangeButton2]
+//        self.orangeButton = [orangeButton1, orangeButton2]
         self.bomButton = [bomButton1, bomButton2]
     }
     

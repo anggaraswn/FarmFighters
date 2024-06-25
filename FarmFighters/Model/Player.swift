@@ -14,6 +14,7 @@ class Player{
     var numberOfBombs: Int = 1
     var winningRound: Int = 0
     var turn: PlayerTurn
+    var hasUsedBom: Bool = false
     
     init(characters: [Character], turn: PlayerTurn) {
         self.characters = characters

@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D5342E02C2B10480081DF69 /* BombAttackDead.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342DF2C2B10480081DF69 /* BombAttackDead.png */; };
+		4D5342E22C2B10690081DF69 /* BombAttack.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E12C2B10690081DF69 /* BombAttack.png */; };
+		4D5342E42C2B16920081DF69 /* informationText.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E32C2B16920081DF69 /* informationText.png */; };
 		BF09EED02C22C0D400421911 /* Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EECF2C22C0D400421911 /* Weapon.swift */; };
 		BF09EED22C22C32200421911 /* Obstacle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EED12C22C32200421911 /* Obstacle.swift */; };
 		BF09EED42C22C41300421911 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EED32C22C41300421911 /* Character.swift */; };
 		BF09EED62C22C4A100421911 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EED52C22C4A100421911 /* Player.swift */; };
-		BF09EED82C231C6800421911 /* OrangeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EED72C231C6800421911 /* OrangeButton.png */; };
-		BF09EEDC2C231C7700421911 /* bomButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BF09EEDB2C231C7700421911 /* bomButton.png */; };
 		BF2E4CC92C26FC8C006E7D18 /* background-mid-r1.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC32C26FC8C006E7D18 /* background-mid-r1.png */; };
 		BF2E4CCA2C26FC8C006E7D18 /* ground-left-r1.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC42C26FC8C006E7D18 /* ground-left-r1.png */; };
 		BF2E4CCB2C26FC8C006E7D18 /* ground-right-r1.png in Resources */ = {isa = PBXBuildFile; fileRef = BF2E4CC52C26FC8C006E7D18 /* ground-right-r1.png */; };
@@ -89,12 +90,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D5342DF2C2B10480081DF69 /* BombAttackDead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BombAttackDead.png; path = ../../../../../../Downloads/BombAttackDead.png; sourceTree = "<group>"; };
+		4D5342E12C2B10690081DF69 /* BombAttack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BombAttack.png; path = ../../../../../../Downloads/BombAttack.png; sourceTree = "<group>"; };
+		4D5342E32C2B16920081DF69 /* informationText.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = informationText.png; path = ../../../../../../Downloads/informationText.png; sourceTree = "<group>"; };
 		BF09EECF2C22C0D400421911 /* Weapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weapon.swift; sourceTree = "<group>"; };
 		BF09EED12C22C32200421911 /* Obstacle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Obstacle.swift; sourceTree = "<group>"; };
 		BF09EED32C22C41300421911 /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		BF09EED52C22C4A100421911 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		BF09EED72C231C6800421911 /* OrangeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrangeButton.png; sourceTree = "<group>"; };
-		BF09EEDB2C231C7700421911 /* bomButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bomButton.png; sourceTree = "<group>"; };
 		BF2E4CC32C26FC8C006E7D18 /* background-mid-r1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-mid-r1.png"; sourceTree = "<group>"; };
 		BF2E4CC42C26FC8C006E7D18 /* ground-left-r1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ground-left-r1.png"; sourceTree = "<group>"; };
 		BF2E4CC52C26FC8C006E7D18 /* ground-right-r1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ground-right-r1.png"; sourceTree = "<group>"; };
@@ -249,9 +251,10 @@
 				BFE6A3C12C27B7F8007172EA /* Round-3 */,
 				BF2E4CD02C26FCFD006E7D18 /* Weapons */,
 				BFE6A3E72C27EA3D007172EA /* Cutscene */,
-				BF09EED72C231C6800421911 /* OrangeButton.png */,
-				BF09EEDB2C231C7700421911 /* bomButton.png */,
 				BF4C7CC52C2282A300F5E695 /* heart-on.png */,
+				4D5342E32C2B16920081DF69 /* informationText.png */,
+				4D5342DF2C2B10480081DF69 /* BombAttackDead.png */,
+				4D5342E12C2B10690081DF69 /* BombAttack.png */,
 				BF4C7CD12C2282A300F5E695 /* heart-half.png */,
 				BF4C7CD22C2282A300F5E695 /* heart-off.png */,
 			);
@@ -491,6 +494,7 @@
 				BFE6A4002C27EA9C007172EA /* punch-41105.mp3 in Resources */,
 				BF2E4CD62C26FD09006E7D18 /* potato-bomb.png in Resources */,
 				BFD339632C2A74FE007AAFF7 /* round-r2.png in Resources */,
+				4D5342E22C2B10690081DF69 /* BombAttack.png in Resources */,
 				BFE6A3E22C27E9FB007172EA /* obstacle-r1.png in Resources */,
 				BFE6A3D02C27B8C2007172EA /* ground-right-r2.png in Resources */,
 				BFE6A4062C27EA9C007172EA /* upbeat-happy-jazz-162873.mp3 in Resources */,
@@ -529,6 +533,7 @@
 				BFE6A4082C27EA9C007172EA /* space-trip-114102.mp3 in Resources */,
 				BFE6A3C82C27B87B007172EA /* background-left-r2.png in Resources */,
 				BF2E4CCC2C26FC8C006E7D18 /* background-left-r1.png in Resources */,
+				4D5342E02C2B10480081DF69 /* BombAttackDead.png in Resources */,
 				BF2E4CD72C26FD09006E7D18 /* tomato-bomb.png in Resources */,
 				BFC43A662C2ABD6F0033DE13 /* musicLevel2.mp3 in Resources */,
 				BFD3396A2C2A7580007AAFF7 /* ducks-victory.png in Resources */,
@@ -540,12 +545,12 @@
 				BF4C7CE32C2282AF00F5E695 /* Round-1.sks in Resources */,
 				BF2E4CCE2C26FC8C006E7D18 /* ground-mid-r1.png in Resources */,
 				BFD3396E2C2A75E1007AAFF7 /* duck-r1.png in Resources */,
-				BF09EED82C231C6800421911 /* OrangeButton.png in Resources */,
 				BFC43A622C2ABD660033DE13 /* bomb-hit-and-explosion.mp3 in Resources */,
 				BFE6A3BB2C27B738007172EA /* Round-2.sks in Resources */,
 				BFE6A3D42C27B8D9007172EA /* background-right-r3.png in Resources */,
 				BF2E4CD82C26FD09006E7D18 /* tomato.png in Resources */,
 				BFD3395F2C2A74D5007AAFF7 /* round-r3.png in Resources */,
+				4D5342E42C2B16920081DF69 /* informationText.png in Resources */,
 				BFE6A4032C27EA9C007172EA /* slingshot-1-40486.mp3 in Resources */,
 				BFD3396B2C2A7580007AAFF7 /* chickens-win.png in Resources */,
 				BFE6A3CC2C27B885007172EA /* background-left-r3.png in Resources */,
@@ -553,7 +558,6 @@
 				BFE6A3ED2C27EA58007172EA /* second.png in Resources */,
 				BFE6A3DB2C27E9AD007172EA /* chicken-r2.png in Resources */,
 				BFC43A612C2ABD660033DE13 /* aiming.mp3 in Resources */,
-				BF09EEDC2C231C7700421911 /* bomButton.png in Resources */,
 				BFE6A3E42C27EA05007172EA /* obstacle-r2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
