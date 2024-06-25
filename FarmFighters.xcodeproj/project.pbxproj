@@ -232,7 +232,6 @@
 				BF4C7CE22C2282AF00F5E695 /* GameScene.swift */,
 				BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */,
 				BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */,
-				BFC43A5A2C2ABC180033DE13 /* Utils */,
 				BFC43A592C2ABC0E0033DE13 /* Sound */,
 				BF4C7CB62C22826200F5E695 /* Main.storyboard */,
 				BF4C7CB92C22826300F5E695 /* Assets.xcassets */,
@@ -281,6 +280,7 @@
 		BFC43A592C2ABC0E0033DE13 /* Sound */ = {
 			isa = PBXGroup;
 			children = (
+				BFC43A5A2C2ABC180033DE13 /* Utils */,
 			);
 			path = Sound;
 			sourceTree = "<group>";

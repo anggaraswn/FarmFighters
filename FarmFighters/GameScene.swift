@@ -99,12 +99,13 @@ class GameScene: SKScene {
         addChild(cameraNode)
         camera = cameraNode
         
-        // Set the initial camera position to the left side of the screen
-        initialCameraPosition = CGPoint(x: size.width / 4, y: size.height / 2)
+        // Calculate camera positions based on the scene size
+        let cameraPositions = calculateCameraPositions(sceneWidth: size.width, screenSize: view.bounds.size)
+        initialCameraPosition = cameraPositions.initialCameraPosition
+        opponentCameraPosition = cameraPositions.opponentCameraPosition
+
+        // Set the initial camera position
         cameraNode.position = initialCameraPosition
-        
-        // Initialize the opponent camera position to the right side of the screen
-        opponentCameraPosition = CGPoint(x: 3 * size.width / 4, y: size.height / 2)
         
         // Create and position the buttons
         createButtons()
@@ -281,12 +282,15 @@ class GameScene: SKScene {
             }
             
             // Ensure the camera stays within the scene bounds
-            let cameraX = clamp(value: weapon.position.x, lower: size.width / 4, upper: size.width - size.width / 4)
+            let lowerBound = view!.bounds.size.width
+            let upperBound = size.width - view!.bounds.size.width
+            let cameraX = clamp(value: weapon.position.x, lower: lowerBound, upper: upperBound)
             cameraNode.position = CGPoint(x: cameraX, y: size.height / 2)
+
             
-            // Ensure the orange stays within the scene bounds
-            weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
-            weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
+//            // Ensure the orange stays within the scene bounds
+//            weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
+//            weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
             
             // Check if the orange has stopped moving and has been shot
             if abs(weapon.physicsBody!.velocity.dx) < 200 && abs(weapon.physicsBody!.velocity.dy) < 200 {
@@ -329,17 +333,16 @@ class GameScene: SKScene {
         }
     }
     
-    func zoomInBottomLeft() -> SKAction {
-        let scaleAction = SKAction.scale(to: 0.75, duration: 0.5)
-        let moveAction = SKAction.move(to: CGPoint(x: cameraNode.position.x - (size.width * 0.25), y: cameraNode.position.y - (size.height * 0.25)), duration: 0.5)
-        return SKAction.group([scaleAction, moveAction])
+    func calculateCameraPositions(sceneWidth: CGFloat, screenSize: CGSize) -> (initialCameraPosition: CGPoint, opponentCameraPosition: CGPoint) {
+        // Calculate the leftmost camera position
+        let initialCameraPosition = CGPoint(x: screenSize.width, y: size.height / 2)
+        
+        // Calculate the rightmost camera position
+        let opponentCameraPosition = CGPoint(x: sceneWidth - screenSize.width, y: size.height / 2)
+        
+        return (initialCameraPosition, opponentCameraPosition)
     }
-    
-    func zoomInBottomRight() -> SKAction {
-        let scaleAction = SKAction.scale(to: 0.75, duration: 0.5)
-        let moveAction = SKAction.move(to: CGPoint(x: cameraNode.position.x + (size.width * 0.25), y: cameraNode.position.y - (size.height * 0.25)), duration: 0.5)
-        return SKAction.group([scaleAction, moveAction])
-    }
+
     
     func clamp(value: CGFloat, lower: CGFloat, upper: CGFloat) -> CGFloat {
         return min(max(value, lower), upper)
