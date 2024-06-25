@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46FBB99F2C2B1C6A0006689B /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = 46FBB99A2C2B1C6A0006689B /* 5.png */; };
+		46FBB9A02C2B1C6A0006689B /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46FBB99B2C2B1C6A0006689B /* 2.png */; };
+		46FBB9A12C2B1C6A0006689B /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 46FBB99C2C2B1C6A0006689B /* 1.png */; };
+		46FBB9A22C2B1C6A0006689B /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = 46FBB99D2C2B1C6A0006689B /* 3.png */; };
+		46FBB9A32C2B1C6A0006689B /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = 46FBB99E2C2B1C6A0006689B /* 4.png */; };
 		4D5342E02C2B10480081DF69 /* BombAttackDead.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342DF2C2B10480081DF69 /* BombAttackDead.png */; };
 		4D5342E22C2B10690081DF69 /* BombAttack.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E12C2B10690081DF69 /* BombAttack.png */; };
 		4D5342E42C2B16920081DF69 /* informationText.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E32C2B16920081DF69 /* informationText.png */; };
@@ -90,6 +95,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		46FBB99A2C2B1C6A0006689B /* 5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 5.png; path = "../../../../../../../Downloads/drive-download-20240625T153901Z-001/5.png"; sourceTree = "<group>"; };
+		46FBB99B2C2B1C6A0006689B /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 2.png; path = "../../../../../../../Downloads/drive-download-20240625T153901Z-001/2.png"; sourceTree = "<group>"; };
+		46FBB99C2C2B1C6A0006689B /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1.png; path = "../../../../../../../Downloads/drive-download-20240625T153901Z-001/1.png"; sourceTree = "<group>"; };
+		46FBB99D2C2B1C6A0006689B /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 3.png; path = "../../../../../../../Downloads/drive-download-20240625T153901Z-001/3.png"; sourceTree = "<group>"; };
+		46FBB99E2C2B1C6A0006689B /* 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 4.png; path = "../../../../../../../Downloads/drive-download-20240625T153901Z-001/4.png"; sourceTree = "<group>"; };
 		4D5342DF2C2B10480081DF69 /* BombAttackDead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BombAttackDead.png; path = ../../../../../../Downloads/BombAttackDead.png; sourceTree = "<group>"; };
 		4D5342E12C2B10690081DF69 /* BombAttack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BombAttack.png; path = ../../../../../../Downloads/BombAttack.png; sourceTree = "<group>"; };
 		4D5342E32C2B16920081DF69 /* informationText.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = informationText.png; path = ../../../../../../Downloads/informationText.png; sourceTree = "<group>"; };
@@ -184,6 +194,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		46FBB9992C2B1C480006689B /* Countdown */ = {
+			isa = PBXGroup;
+			children = (
+				46FBB99C2C2B1C6A0006689B /* 1.png */,
+				46FBB99B2C2B1C6A0006689B /* 2.png */,
+				46FBB99D2C2B1C6A0006689B /* 3.png */,
+				46FBB99E2C2B1C6A0006689B /* 4.png */,
+				46FBB99A2C2B1C6A0006689B /* 5.png */,
+			);
+			path = Countdown;
+			sourceTree = "<group>";
+		};
 		BF09EECE2C22C0B900421911 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -232,7 +254,6 @@
 				BF4C7CE22C2282AF00F5E695 /* GameScene.swift */,
 				BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */,
 				BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */,
-				BFC43A5A2C2ABC180033DE13 /* Utils */,
 				BFC43A592C2ABC0E0033DE13 /* Sound */,
 				BF4C7CB62C22826200F5E695 /* Main.storyboard */,
 				BF4C7CB92C22826300F5E695 /* Assets.xcassets */,
@@ -250,6 +271,7 @@
 				BFE6A3BC2C27B74B007172EA /* Round-2 */,
 				BFE6A3C12C27B7F8007172EA /* Round-3 */,
 				BF2E4CD02C26FCFD006E7D18 /* Weapons */,
+				46FBB9992C2B1C480006689B /* Countdown */,
 				BFE6A3E72C27EA3D007172EA /* Cutscene */,
 				BF4C7CC52C2282A300F5E695 /* heart-on.png */,
 				4D5342E32C2B16920081DF69 /* informationText.png */,
@@ -281,6 +303,7 @@
 		BFC43A592C2ABC0E0033DE13 /* Sound */ = {
 			isa = PBXGroup;
 			children = (
+				BFC43A5A2C2ABC180033DE13 /* Utils */,
 			);
 			path = Sound;
 			sourceTree = "<group>";
@@ -491,6 +514,8 @@
 			files = (
 				BFE6A3CD2C27B885007172EA /* ground-left-r3.png in Resources */,
 				BF2E4CD52C26FD09006E7D18 /* potato.png in Resources */,
+				46FBB9A12C2B1C6A0006689B /* 1.png in Resources */,
+				46FBB9A32C2B1C6A0006689B /* 4.png in Resources */,
 				BFE6A4002C27EA9C007172EA /* punch-41105.mp3 in Resources */,
 				BF2E4CD62C26FD09006E7D18 /* potato-bomb.png in Resources */,
 				BFD339632C2A74FE007AAFF7 /* round-r2.png in Resources */,
@@ -507,6 +532,7 @@
 				BFE6A3C42C27B80F007172EA /* background-mid-r2.png in Resources */,
 				BFD339692C2A7580007AAFF7 /* chickens-victory.png in Resources */,
 				BFD3396C2C2A7580007AAFF7 /* ducks-win.png in Resources */,
+				46FBB9A22C2B1C6A0006689B /* 3.png in Resources */,
 				BFE6A3C52C27B80F007172EA /* background-mid-r3.png in Resources */,
 				BFE6A4052C27EA9C007172EA /* perfect-day-jazzband-180563.mp3 in Resources */,
 				BFE6A4012C27EA9C007172EA /* punch-140236.mp3 in Resources */,
@@ -523,6 +549,7 @@
 				BF2E4CCA2C26FC8C006E7D18 /* ground-left-r1.png in Resources */,
 				BFE6A3EC2C27EA58007172EA /* first.png in Resources */,
 				BFE6A3D82C27DE84007172EA /* Round-3.sks in Resources */,
+				46FBB99F2C2B1C6A0006689B /* 5.png in Resources */,
 				BFE6A3EB2C27EA58007172EA /* third.png in Resources */,
 				BF2E4CC92C26FC8C006E7D18 /* background-mid-r1.png in Resources */,
 				BF4C7CD42C2282A300F5E695 /* heart-on.png in Resources */,
@@ -530,6 +557,7 @@
 				BFE6A3C92C27B87B007172EA /* ground-left-r2.png in Resources */,
 				BF2E4CCD2C26FC8C006E7D18 /* background-right-r1.png in Resources */,
 				BFC43A652C2ABD6F0033DE13 /* musicLevel1.mp3 in Resources */,
+				46FBB9A02C2B1C6A0006689B /* 2.png in Resources */,
 				BFE6A4082C27EA9C007172EA /* space-trip-114102.mp3 in Resources */,
 				BFE6A3C82C27B87B007172EA /* background-left-r2.png in Resources */,
 				BF2E4CCC2C26FC8C006E7D18 /* background-left-r1.png in Resources */,

@@ -59,7 +59,7 @@ class GameScene: SKScene {
     var isWeaponShot = false
     var isGameOver = false
     var isBombShot = false
-    var timeLabel: SKLabelNode!
+    var countdownLabel: SKSpriteNode!
     
     
     //sound + music
@@ -99,16 +99,16 @@ class GameScene: SKScene {
         addChild(cameraNode)
         camera = cameraNode
         
-        // Set the initial camera position to the left side of the screen
-        initialCameraPosition = CGPoint(x: size.width / 4, y: size.height / 2)
+        // Calculate camera positions based on the scene size
+        let cameraPositions = calculateCameraPositions(sceneWidth: size.width, screenSize: view.bounds.size)
+        initialCameraPosition = cameraPositions.initialCameraPosition
+        opponentCameraPosition = cameraPositions.opponentCameraPosition
+
+        // Set the initial camera position
         cameraNode.position = initialCameraPosition
-        
-        // Initialize the opponent camera position to the right side of the screen
-        opponentCameraPosition = CGPoint(x: 3 * size.width / 4, y: size.height / 2)
         
         // Create and position the buttons
         createButtons()
-        timeLabel = childNode(withName: "time") as? SKLabelNode
         
         let roundText = displayImage(imageNamed: "round-r\(GameScene.round)", anchorPoint: CGPoint(x: 0.5, y: 0.5))
         Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
@@ -222,8 +222,8 @@ class GameScene: SKScene {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        timeLabel.removeAllActions()
-        timeLabel.isHidden = true
+        countdownLabel.removeAllActions()
+        countdownLabel.removeFromParent()
         
         guard let character = selectedCharacter else { return }
         
@@ -281,12 +281,15 @@ class GameScene: SKScene {
             }
             
             // Ensure the camera stays within the scene bounds
-            let cameraX = clamp(value: weapon.position.x, lower: size.width / 4, upper: size.width - size.width / 4)
+            let lowerBound = view!.bounds.size.width
+            let upperBound = size.width - view!.bounds.size.width
+            let cameraX = clamp(value: weapon.position.x, lower: lowerBound, upper: upperBound)
             cameraNode.position = CGPoint(x: cameraX, y: size.height / 2)
+
             
-            // Ensure the orange stays within the scene bounds
-            weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
-            weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
+//            // Ensure the orange stays within the scene bounds
+//            weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
+//            weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
             
             // Check if the orange has stopped moving and has been shot
             if abs(weapon.physicsBody!.velocity.dx) < 200 && abs(weapon.physicsBody!.velocity.dy) < 200 {
@@ -329,17 +332,16 @@ class GameScene: SKScene {
         }
     }
     
-    func zoomInBottomLeft() -> SKAction {
-        let scaleAction = SKAction.scale(to: 0.75, duration: 0.5)
-        let moveAction = SKAction.move(to: CGPoint(x: cameraNode.position.x - (size.width * 0.25), y: cameraNode.position.y - (size.height * 0.25)), duration: 0.5)
-        return SKAction.group([scaleAction, moveAction])
+    func calculateCameraPositions(sceneWidth: CGFloat, screenSize: CGSize) -> (initialCameraPosition: CGPoint, opponentCameraPosition: CGPoint) {
+        // Calculate the leftmost camera position
+        let initialCameraPosition = CGPoint(x: screenSize.width, y: size.height / 2)
+        
+        // Calculate the rightmost camera position
+        let opponentCameraPosition = CGPoint(x: sceneWidth - screenSize.width, y: size.height / 2)
+        
+        return (initialCameraPosition, opponentCameraPosition)
     }
-    
-    func zoomInBottomRight() -> SKAction {
-        let scaleAction = SKAction.scale(to: 0.75, duration: 0.5)
-        let moveAction = SKAction.move(to: CGPoint(x: cameraNode.position.x + (size.width * 0.25), y: cameraNode.position.y - (size.height * 0.25)), duration: 0.5)
-        return SKAction.group([scaleAction, moveAction])
-    }
+
     
     func clamp(value: CGFloat, lower: CGFloat, upper: CGFloat) -> CGFloat {
         return min(max(value, lower), upper)
@@ -443,8 +445,8 @@ class GameScene: SKScene {
                 }
                 pathDots.removeAll()
                 touchStart = .zero
-                timeLabel.removeAllActions()
-                timeLabel.isHidden = true
+                countdownLabel.removeAllActions()
+                countdownLabel.removeFromParent()
                 
                 if let texture = character.node.texture {
                     let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
@@ -626,26 +628,29 @@ class GameScene: SKScene {
     }
     
     func startCountdown() {
-        timeLabel.isHidden = false
-        timeLabel.position = cameraNode.position
-        timeLabel.text = "5"
-        timeLabel.zPosition = 100
-        
         var countdownValue = 5
+        let texture = SKTexture(imageNamed: "\(countdownValue)")
+        countdownLabel = SKSpriteNode(texture: texture)
+        countdownLabel.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        countdownLabel.position = CGPoint(x: cameraNode.position.x, y: cameraNode.position.y + 500)
+        countdownLabel.zPosition = 100
+        countdownLabel.setScale(0.6)
+        addChild(countdownLabel)
+        
         let countdownAction = SKAction.repeat(SKAction.sequence([
             SKAction.run { [weak self] in
+                self?.countdownLabel.texture = SKTexture(imageNamed: "\(countdownValue)")
                 countdownValue -= 1
-                self?.timeLabel.text = "\(countdownValue)"
             },
             SKAction.wait(forDuration: 1.0)
         ]), count: 5)
         
         let endCountdownAction = SKAction.run { [weak self] in
-            self?.timeLabel.isHidden = true
+            self?.countdownLabel.removeFromParent()
             self?.shootWeapon()
         }
         
-        timeLabel.run(SKAction.sequence([countdownAction, endCountdownAction]))
+        countdownLabel.run(SKAction.sequence([countdownAction, endCountdownAction]))
     }
     
 }
