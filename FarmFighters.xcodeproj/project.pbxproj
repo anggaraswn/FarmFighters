@@ -10,6 +10,8 @@
 		4D5342E02C2B10480081DF69 /* BombAttackDead.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342DF2C2B10480081DF69 /* BombAttackDead.png */; };
 		4D5342E22C2B10690081DF69 /* BombAttack.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E12C2B10690081DF69 /* BombAttack.png */; };
 		4D5342E42C2B16920081DF69 /* informationText.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E32C2B16920081DF69 /* informationText.png */; };
+		4D5342E62C2B1B560081DF69 /* ChangePositionDead.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E52C2B1B560081DF69 /* ChangePositionDead.png */; };
+		4D5342E82C2B1B7A0081DF69 /* ChangePosition.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5342E72C2B1B7A0081DF69 /* ChangePosition.png */; };
 		BF09EED02C22C0D400421911 /* Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EECF2C22C0D400421911 /* Weapon.swift */; };
 		BF09EED22C22C32200421911 /* Obstacle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EED12C22C32200421911 /* Obstacle.swift */; };
 		BF09EED42C22C41300421911 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF09EED32C22C41300421911 /* Character.swift */; };
@@ -93,6 +95,8 @@
 		4D5342DF2C2B10480081DF69 /* BombAttackDead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BombAttackDead.png; path = ../../../../../../Downloads/BombAttackDead.png; sourceTree = "<group>"; };
 		4D5342E12C2B10690081DF69 /* BombAttack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BombAttack.png; path = ../../../../../../Downloads/BombAttack.png; sourceTree = "<group>"; };
 		4D5342E32C2B16920081DF69 /* informationText.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = informationText.png; path = ../../../../../../Downloads/informationText.png; sourceTree = "<group>"; };
+		4D5342E52C2B1B560081DF69 /* ChangePositionDead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ChangePositionDead.png; path = ../../../../../../Downloads/ChangePositionDead.png; sourceTree = "<group>"; };
+		4D5342E72C2B1B7A0081DF69 /* ChangePosition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ChangePosition.png; path = ../../../../../../Downloads/ChangePosition.png; sourceTree = "<group>"; };
 		BF09EECF2C22C0D400421911 /* Weapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weapon.swift; sourceTree = "<group>"; };
 		BF09EED12C22C32200421911 /* Obstacle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Obstacle.swift; sourceTree = "<group>"; };
 		BF09EED32C22C41300421911 /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
@@ -252,6 +256,8 @@
 				BFE6A3E72C27EA3D007172EA /* Cutscene */,
 				BF4C7CC52C2282A300F5E695 /* heart-on.png */,
 				4D5342E32C2B16920081DF69 /* informationText.png */,
+				4D5342E52C2B1B560081DF69 /* ChangePositionDead.png */,
+				4D5342E72C2B1B7A0081DF69 /* ChangePosition.png */,
 				4D5342DF2C2B10480081DF69 /* BombAttackDead.png */,
 				4D5342E12C2B10690081DF69 /* BombAttack.png */,
 				BF4C7CD12C2282A300F5E695 /* heart-half.png */,
@@ -489,6 +495,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D5342E82C2B1B7A0081DF69 /* ChangePosition.png in Resources */,
 				BFE6A3CD2C27B885007172EA /* ground-left-r3.png in Resources */,
 				BF2E4CD52C26FD09006E7D18 /* potato.png in Resources */,
 				BFE6A4002C27EA9C007172EA /* punch-41105.mp3 in Resources */,
@@ -521,6 +528,7 @@
 				BF4C7CB82C22826200F5E695 /* Main.storyboard in Resources */,
 				BF4C7CDB2C2282A300F5E695 /* chicken-r1.png in Resources */,
 				BF2E4CCA2C26FC8C006E7D18 /* ground-left-r1.png in Resources */,
+				4D5342E62C2B1B560081DF69 /* ChangePositionDead.png in Resources */,
 				BFE6A3EC2C27EA58007172EA /* first.png in Resources */,
 				BFE6A3D82C27DE84007172EA /* Round-3.sks in Resources */,
 				BFE6A3EB2C27EA58007172EA /* third.png in Resources */,

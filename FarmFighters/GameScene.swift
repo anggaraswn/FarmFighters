@@ -46,7 +46,7 @@ class GameScene: SKScene {
     var initialNodePosition: CGPoint?
     var cancelIcon: SKSpriteNode!
     
-    var orangeButton: [SKSpriteNode] = []
+    var positionButton: [SKSpriteNode] = []
     var bomButton: [SKSpriteNode] = []
     
     // Current weapon type
@@ -120,6 +120,8 @@ class GameScene: SKScene {
         audioManager.playBGMusic("musicLevel1.mp3", volume: 0.2)
     }
     
+    
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self)
@@ -150,6 +152,18 @@ class GameScene: SKScene {
             
         } else {
             // Check if the touch was on any of the weapon buttons
+            
+            for button in positionButton {
+                if button.contains(location) {
+                    let informationRepositioning = displayImage(imageNamed: "informationText", anchorPoint: CGPoint(x: 0.5, y: 0.5))
+                    Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
+                        informationRepositioning.removeFromParent()
+                    }
+                    break
+                }
+            }
+            
+        
             
             for button in bomButton {
                 if button.contains(location) {
@@ -501,6 +515,14 @@ class GameScene: SKScene {
     }
     
     func createButtons() {
+        let positionTexture1 = SKTexture(imageNamed: "ChangePosition")
+        let positionButton1 = SKSpriteNode(texture: positionTexture1)
+        positionButton1.position = CGPoint(x: 450, y: 130) // Set an absolute position for the first bom button
+        positionButton1.zPosition = 100 // Ensure it's rendered on top of other nodes
+        positionButton1.setScale(0.09)
+        addChild(positionButton1) // Add the first bom button to the scene
+        
+        
         let bomTexture = SKTexture(imageNamed: "BombAttack")
         let bomButton1 = SKSpriteNode(texture: bomTexture)
         bomButton1.position = CGPoint(x: 250, y: 130) // Set an absolute position for the first bom button
@@ -508,6 +530,12 @@ class GameScene: SKScene {
         bomButton1.setScale(0.09)
         addChild(bomButton1) // Add the first bom button to the scene
         
+        let positionTexture2 = SKTexture(imageNamed: "ChangePosition")
+        let positionButton2 = SKSpriteNode(texture: positionTexture2)
+        positionButton2.position = CGPoint(x: 4600, y: 130) // Set an absolute position for the first bom button
+        positionButton2.zPosition = 100 // Ensure it's rendered on top of other nodes
+        positionButton2.setScale(0.09)
+        addChild(positionButton2) // Add the first bom button to the scene
         
         let bomTexture2 = SKTexture(imageNamed: "BombAttack")
         let bomButton2 = SKSpriteNode(texture: bomTexture2)
@@ -517,7 +545,7 @@ class GameScene: SKScene {
         addChild(bomButton2) // Add the second bom button to the scene
         
         // Assign the class variables for later reference
-//        self.orangeButton = [orangeButton1, orangeButton2]
+        self.positionButton = [positionButton1, positionButton2]
         self.bomButton = [bomButton1, bomButton2]
     }
     
