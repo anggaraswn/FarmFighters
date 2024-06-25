@@ -51,6 +51,10 @@ class Character{
         }
     }
     
+    func updateHeartPosition() {
+            heart.position = CGPoint(x: node.position.x, y: node.position.y + 220)
+        }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

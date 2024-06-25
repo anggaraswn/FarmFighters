@@ -19,7 +19,7 @@ enum PlayerTurn {
 }
 
 class GameScene: SKScene {
-    var round: Int = 1
+    static var round: Int = 1
     
     var player1: Player = Player(characters: [], turn: .player1)
     var player2: Player = Player(characters: [], turn: .player2)
@@ -38,8 +38,7 @@ class GameScene: SKScene {
     var selectedCharacter: Character?
     var isNodeReadyToMove = false {
         didSet{
-            let position: CGPoint = playerTurn == .player2 ? opponentCameraPosition : initialCameraPosition
-            cancelIcon.position = position
+            cancelIcon.position = cameraNode.position
             cancelIcon.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             cancelIcon.isHidden = !isNodeReadyToMove
         }
@@ -61,11 +60,11 @@ class GameScene: SKScene {
     var timeLabel: SKLabelNode!
     
     static func loadRound(round: Int) -> GameScene? {
-        return GameScene(fileNamed: "Round-\(round)")
+        return GameScene(fileNamed: "Round-\(GameScene.round)")
     }
     
     override func didMove(to view: SKView) {
-        print("Called")
+        print("Round = \(GameScene.round)")
         shapeNode.lineWidth = 40
         shapeNode.lineCap = .round
         shapeNode.strokeColor = UIColor(white: 1, alpha: 0.3)
@@ -97,7 +96,7 @@ class GameScene: SKScene {
         createButtons()
         timeLabel = childNode(withName: "time") as? SKLabelNode
         
-        let roundText = displayImage(imageNamed: "round-r\(round)", anchorPoint: CGPoint(x: 0.5, y: 0.5))
+        let roundText = displayImage(imageNamed: "round-r\(GameScene.round)", anchorPoint: CGPoint(x: 0.5, y: 0.5))
         Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
             roundText.removeFromParent()
         }
@@ -187,8 +186,8 @@ class GameScene: SKScene {
         
         if isNodeReadyToMove {
             character.position.x = location.x
-            //            character.position.y = location.y
-            //            adjustCharacterPosition(character: character)
+            character.position.y = location.y
+            adjustCharacterPosition(character: character)
         }
     }
     
@@ -232,6 +231,7 @@ class GameScene: SKScene {
             // Check if the weapon is out of bounds
             if weapon.position.x < 0 || weapon.position.x > size.width || weapon.position.y < 0 || weapon.position.y > size.height {
                 print("Out of scene")
+                removeWeapon()
                 moveCameraAndRemoveOrange()
                 return
             }
@@ -258,6 +258,15 @@ class GameScene: SKScene {
         }
         
         checkNodeReadyToMove(currentTime: currentTime)
+        for character in characters.values {
+            character.updateHeartPosition()
+        }
+    }
+    
+    func removeWeapon(){
+        weapon?.removeFromParent()
+        weapon = nil
+        isOrangeShot = false
     }
     
     func moveCameraAndRemoveOrange() {
@@ -306,13 +315,13 @@ class GameScene: SKScene {
                 player1.winningRound += 1
                 _ = displayImage(imageNamed: "chickens-win", anchorPoint: CGPoint(x: 0.5, y: 0.5))
             }
-            round += 1
+            GameScene.round += 1
             // ini reset game masih ga jalan
-//            if checkVictory(){
-//                return
-//            }
+            //            if checkVictory(){
+            //                return
+            //            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                if let scene = GameScene.loadRound(round: self.round){
+                if let scene = GameScene.loadRound(round: GameScene.round){
                     scene.scaleMode = .aspectFill
                     if let view = self.view {
                         view.presentScene(scene)
@@ -337,12 +346,10 @@ class GameScene: SKScene {
     }
     
     func displayImage(imageNamed: String, anchorPoint: CGPoint) -> SKSpriteNode{
-        let position: CGPoint = playerTurn == .player2 ? opponentCameraPosition : initialCameraPosition
-        
         let texture = SKTexture(imageNamed: imageNamed)
         let node = SKSpriteNode(texture: texture)
         node.anchorPoint = anchorPoint
-        node.position = position
+        node.position = cameraNode.position
         node.zPosition = 100
         
         addChild(node)
@@ -390,23 +397,15 @@ class GameScene: SKScene {
                 timeLabel.removeAllActions()
                 timeLabel.isHidden = true
                 
-                DispatchQueue.main.asyncAfter(deadline: .now()) {
-                    if let texture = character.node.texture {
-                        DispatchQueue.global(qos: .userInitiated).async {
-                            let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
-                            newPhysicsBody.isDynamic = true
-                            newPhysicsBody.allowsRotation = false
-                            newPhysicsBody.pinned = false
-                            newPhysicsBody.affectedByGravity = true
-                            newPhysicsBody.categoryBitMask = PhysicsCategory.Character
-                            newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
-                            //                            newPhysicsBody.mass = 1000000
-                            
-                            DispatchQueue.main.async {
-                                character.node.physicsBody = newPhysicsBody
-                            }
-                        }
-                    }
+                if let texture = character.node.texture {
+                    let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
+                    newPhysicsBody.isDynamic = true
+                    newPhysicsBody.allowsRotation = false
+                    newPhysicsBody.pinned = false
+                    newPhysicsBody.affectedByGravity = true
+                    newPhysicsBody.categoryBitMask = PhysicsCategory.Character
+                    newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
+                    character.node.physicsBody = newPhysicsBody
                 }
             }
         }
@@ -564,7 +563,7 @@ class GameScene: SKScene {
             if let texture = character.node.texture {
                 DispatchQueue.global(qos: .userInitiated).async {
                     let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
-                    newPhysicsBody.isDynamic = false
+                    newPhysicsBody.isDynamic = true
                     newPhysicsBody.allowsRotation = false
                     newPhysicsBody.pinned = false
                     newPhysicsBody.affectedByGravity = true
@@ -589,13 +588,15 @@ class GameScene: SKScene {
     
     func startCountdown() {
         timeLabel.isHidden = false
-        timeLabel.text = "Time Remaining: 5"
+        timeLabel.position = cameraNode.position
+        timeLabel.text = "5"
+        timeLabel.zPosition = 100
         
         var countdownValue = 5
         let countdownAction = SKAction.repeat(SKAction.sequence([
             SKAction.run { [weak self] in
                 countdownValue -= 1
-                self?.timeLabel.text = "Time Remaining: \(countdownValue)"
+                self?.timeLabel.text = "\(countdownValue)"
             },
             SKAction.wait(forDuration: 1.0)
         ]), count: 5)
