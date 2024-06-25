@@ -9,7 +9,7 @@ import SpriteKit
 import GameplayKit
 
 enum WeaponType {
-    case orange
+    case basic
     case bom
 }
 
@@ -21,8 +21,8 @@ enum PlayerTurn {
 class GameScene: SKScene {
     static var round: Int = 1
     
-    var player1: Player = Player(characters: [], turn: .player1)
-    var player2: Player = Player(characters: [], turn: .player2)
+    static var player1: Player = Player(characters: [], turn: .player1)
+    static var player2: Player = Player(characters: [], turn: .player2)
     
     var characters = [String: Character]()
     var obstacles = [String: Obstacle]()
@@ -50,13 +50,14 @@ class GameScene: SKScene {
     var bomButton: [SKSpriteNode] = []
     
     // Current weapon type
-    var currentWeapon: WeaponType = .orange
+    var currentWeapon: WeaponType = .basic
     
     var cameraNode = SKCameraNode()
     var initialCameraPosition: CGPoint = .zero
     var opponentCameraPosition: CGPoint = .zero
     var orangeStoppedTime: TimeInterval?
-    var isOrangeShot = false
+    var isWeaponShot = false
+    var isGameOver = false
     var timeLabel: SKLabelNode!
     
     
@@ -96,12 +97,13 @@ class GameScene: SKScene {
         addChild(cameraNode)
         camera = cameraNode
         
-        // Set the initial camera position to the left side of the screen
-        initialCameraPosition = CGPoint(x: size.width / 4, y: size.height / 2)
+        // Calculate camera positions based on the scene size
+        let cameraPositions = calculateCameraPositions(sceneWidth: size.width, screenSize: view.bounds.size)
+        initialCameraPosition = cameraPositions.initialCameraPosition
+        opponentCameraPosition = cameraPositions.opponentCameraPosition
+
+        // Set the initial camera position
         cameraNode.position = initialCameraPosition
-        
-        // Initialize the opponent camera position to the right side of the screen
-        opponentCameraPosition = CGPoint(x: 3 * size.width / 4, y: size.height / 2)
         
         // Create and position the buttons
         createButtons()
@@ -120,7 +122,7 @@ class GameScene: SKScene {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        if let node = atPoint(location) as? SKSpriteNode, let nodeName = node.name, let character = characters[nodeName], !isOrangeShot{
+        if let node = atPoint(location) as? SKSpriteNode, let nodeName = node.name, let character = characters[nodeName], !isWeaponShot{
             
             node.physicsBody = nil
             
@@ -135,7 +137,7 @@ class GameScene: SKScene {
             touchStart = location
             
             // Reset the shot flag
-            isOrangeShot = false
+            isWeaponShot = false
             
             selectedCharacter = character
             initialNodePosition = character.position
@@ -148,7 +150,7 @@ class GameScene: SKScene {
             // Check if the touch was on any of the weapon buttons
             for button in orangeButton {
                 if button.contains(location) {
-                    currentWeapon = .orange
+                    currentWeapon = .basic
                     break
                 }
             }
@@ -166,7 +168,7 @@ class GameScene: SKScene {
         let touch = touches.first!
         var location = touch.location(in: self)
         
-        if !isNodeReadyToMove && !isOrangeShot{
+        if !isNodeReadyToMove && !isWeaponShot{
             let dx = location.x - touchStart.x
             let dy = location.y - touchStart.y
             let distance = sqrt(dx*dx + dy*dy)
@@ -229,7 +231,7 @@ class GameScene: SKScene {
             character.position = initialPosition
         }else{
             if initialNodePosition != character.position && getCurrentPlayer().movementToken > 0 {
-                //                token -= 1
+//                getCurrentPlayer().movementToken -= 1
             }
         }
         
@@ -238,13 +240,13 @@ class GameScene: SKScene {
         selectedCharacter = nil
         touchStartTime = nil
         isNodeReadyToMove = false
-        run(shoot)
     }
     
     
     override func update(_ currentTime: TimeInterval) {
         // Update the camera position to follow the orange
-        if isOrangeShot, let weapon = weapon {
+        if isWeaponShot, let weapon = weapon {
+            guard !isGameOver else { return }
             // Check if the weapon is out of bounds
             if weapon.position.x < 0 || weapon.position.x > size.width || weapon.position.y < 0 || weapon.position.y > size.height {
                 print("Out of scene")
@@ -254,12 +256,15 @@ class GameScene: SKScene {
             }
             
             // Ensure the camera stays within the scene bounds
-            let cameraX = clamp(value: weapon.position.x, lower: size.width / 4, upper: size.width - size.width / 4)
+            let lowerBound = view!.bounds.size.width
+            let upperBound = size.width - view!.bounds.size.width
+            let cameraX = clamp(value: weapon.position.x, lower: lowerBound, upper: upperBound)
             cameraNode.position = CGPoint(x: cameraX, y: size.height / 2)
+
             
-            // Ensure the orange stays within the scene bounds
-            weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
-            weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
+//            // Ensure the orange stays within the scene bounds
+//            weapon.position.x = clamp(value: weapon.position.x, lower: weapon.size.width / 2, upper: size.width - weapon.size.width / 2)
+//            weapon.position.y = clamp(value: weapon.position.y, lower: weapon.size.height / 2, upper: size.height - weapon.size.height / 2)
             
             // Check if the orange has stopped moving and has been shot
             if abs(weapon.physicsBody!.velocity.dx) < 200 && abs(weapon.physicsBody!.velocity.dy) < 200 {
@@ -275,6 +280,7 @@ class GameScene: SKScene {
         }
         
         checkNodeReadyToMove(currentTime: currentTime)
+        
         for character in characters.values {
             character.updateHeartPosition()
         }
@@ -283,7 +289,7 @@ class GameScene: SKScene {
     func removeWeapon(){
         weapon?.removeFromParent()
         weapon = nil
-        isOrangeShot = false
+        isWeaponShot = false
     }
     
     func moveCameraAndRemoveOrange() {
@@ -297,21 +303,20 @@ class GameScene: SKScene {
             // Remove the orange from the scene
             self?.weapon?.removeFromParent()
             self?.weapon = nil
-            self?.isOrangeShot = false
+            self?.isWeaponShot = false
         }
     }
     
-    func zoomInBottomLeft() -> SKAction {
-        let scaleAction = SKAction.scale(to: 0.75, duration: 0.5)
-        let moveAction = SKAction.move(to: CGPoint(x: cameraNode.position.x - (size.width * 0.25), y: cameraNode.position.y - (size.height * 0.25)), duration: 0.5)
-        return SKAction.group([scaleAction, moveAction])
+    func calculateCameraPositions(sceneWidth: CGFloat, screenSize: CGSize) -> (initialCameraPosition: CGPoint, opponentCameraPosition: CGPoint) {
+        // Calculate the leftmost camera position
+        let initialCameraPosition = CGPoint(x: screenSize.width, y: size.height / 2)
+        
+        // Calculate the rightmost camera position
+        let opponentCameraPosition = CGPoint(x: sceneWidth - screenSize.width, y: size.height / 2)
+        
+        return (initialCameraPosition, opponentCameraPosition)
     }
-    
-    func zoomInBottomRight() -> SKAction {
-        let scaleAction = SKAction.scale(to: 0.75, duration: 0.5)
-        let moveAction = SKAction.move(to: CGPoint(x: cameraNode.position.x + (size.width * 0.25), y: cameraNode.position.y - (size.height * 0.25)), duration: 0.5)
-        return SKAction.group([scaleAction, moveAction])
-    }
+
     
     func clamp(value: CGFloat, lower: CGFloat, upper: CGFloat) -> CGFloat {
         return min(max(value, lower), upper)
@@ -319,24 +324,25 @@ class GameScene: SKScene {
     
     func resetGame() {
         // Reset player characters and any other necessary game state
-        player1.characters = []
-        player2.characters = []
+        GameScene.player1.characters = []
+        GameScene.player2.characters = []
     }
     
     func checkEndRound() {
-        if player1.characters.isEmpty || player1.characters.isEmpty {
-            if player1.characters.isEmpty{
-                player2.winningRound += 1
+        if GameScene.player1.characters.isEmpty || GameScene.player2.characters.isEmpty {
+            isGameOver = true
+            if GameScene.player1.characters.isEmpty{
+                GameScene.player2.winningRound += 1
                 _ = displayImage(imageNamed: "ducks-win", anchorPoint: CGPoint(x: 0.5, y: 0.5))
             }else{
-                player1.winningRound += 1
+                GameScene.player1.winningRound += 1
                 _ = displayImage(imageNamed: "chickens-win", anchorPoint: CGPoint(x: 0.5, y: 0.5))
             }
             GameScene.round += 1
-            // ini reset game masih ga jalan
-            //            if checkVictory(){
-            //                return
-            //            }
+            if checkVictory(){
+                print("Game Over")
+                return
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                 if let scene = GameScene.loadRound(round: GameScene.round){
                     scene.scaleMode = .aspectFill
@@ -349,13 +355,16 @@ class GameScene: SKScene {
     }
     
     func checkVictory() -> Bool{
-        if player1.winningRound == 2 || player2.winningRound == 2{
-            if player1.winningRound == 2{
-                _ = displayImage(imageNamed: "chickens-victory", anchorPoint: CGPoint(x: 0, y: 0))
+        if GameScene.player1.winningRound == 2 || GameScene.player2.winningRound == 2{
+            isGameOver = true
+            var node: SKSpriteNode
+            if GameScene.player1.winningRound == 2{
+                node = displayImage(imageNamed: "chickens-victory", anchorPoint: CGPoint(x: 0, y: 0))
             }else{
-                _ = displayImage(imageNamed: "ducks-victory", anchorPoint: CGPoint(x: 0, y: 0))
+                node = displayImage(imageNamed: "ducks-victory", anchorPoint: CGPoint(x: 0, y: 0))
             }
             
+            node.zPosition = 101
             return true
         }
         
@@ -380,10 +389,10 @@ class GameScene: SKScene {
             characters.removeValue(forKey: character.node.name ?? "")
             character.node.removeFromParent()
             
-            if let index = player1.characters.firstIndex(where: { $0.node.name == character.node.name }) {
-                player1.characters.remove(at: index)
-            } else if let index = player2.characters.firstIndex(where: { $0.node.name == character.node.name }) {
-                player2.characters.remove(at: index)
+            if let index = GameScene.player1.characters.firstIndex(where: { $0.node.name == character.node.name }) {
+                GameScene.player1.characters.remove(at: index)
+            } else if let index = GameScene.player2.characters.firstIndex(where: { $0.node.name == character.node.name }) {
+                GameScene.player2.characters.remove(at: index)
             }
             
             checkEndRound() // Check if this was the last character for any player
@@ -391,7 +400,7 @@ class GameScene: SKScene {
     }
     
     func getCurrentPlayer() -> Player{
-        return playerTurn == player1.turn ? player1 : player2
+        return playerTurn == GameScene.player1.turn ? GameScene.player1 : GameScene.player2
     }
     
     func checkNodeReadyToMove(currentTime: TimeInterval){
@@ -405,7 +414,7 @@ class GameScene: SKScene {
                 weapon?.removeFromParent()
                 weapon = nil
                 shapeNode.path = nil
-                isOrangeShot = false
+                isWeaponShot = false
                 for dot in pathDots {
                     dot.removeFromParent()
                 }
@@ -440,9 +449,9 @@ class GameScene: SKScene {
                 characters[name] = character
                 
                 if name.contains("chicken") {
-                    player1.characters.append(character)
+                    GameScene.player1.characters.append(character)
                 } else if name.contains("duck") {
-                    player2.characters.append(character)
+                    GameScene.player2.characters.append(character)
                 }
             }
         }
@@ -564,7 +573,7 @@ class GameScene: SKScene {
         weapon.physicsBody?.applyImpulse(vector)
         
         // Set the orange shot flag to true
-        isOrangeShot = true
+        isWeaponShot = true
         
         // Remove the path from shapeNode
         shapeNode.path = nil
@@ -575,6 +584,7 @@ class GameScene: SKScene {
         }
         pathDots.removeAll()
         touchStart = .zero
+        run(shoot)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             if let texture = character.node.texture {
@@ -639,7 +649,7 @@ extension GameScene: SKPhysicsContactDelegate {
         switch other.categoryBitMask {
         case PhysicsCategory.Character:
             if contact.collisionImpulse > 50 && !isNodeReadyToMove{
-                if weapon.type == .orange{
+                if weapon.type == .basic{
                     run(hitStone)
                 }else{
                     run(hitBomb)
@@ -648,10 +658,10 @@ extension GameScene: SKPhysicsContactDelegate {
                 if let characterNode = other.node as? SKSpriteNode, let character = characters[characterNode.name ?? ""] {
                     let characterPlayer: Player
                     
-                    if player1.characters.contains(where: { $0 === character }) {
-                        characterPlayer = player1
-                    } else if player2.characters.contains(where: { $0 === character }) {
-                        characterPlayer = player2
+                    if GameScene.player1.characters.contains(where: { $0 === character }) {
+                        characterPlayer = GameScene.player1
+                    } else if GameScene.player2.characters.contains(where: { $0 === character }) {
+                        characterPlayer = GameScene.player2
                     } else {
                         return
                     }
