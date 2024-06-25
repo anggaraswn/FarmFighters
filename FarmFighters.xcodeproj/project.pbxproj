@@ -35,6 +35,14 @@
 		BF4C7CE42C2282AF00F5E695 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CE22C2282AF00F5E695 /* GameScene.swift */; };
 		BF4C7CE72C2282BB00F5E695 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */; };
 		BF4C7CEA2C2282C200F5E695 /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */; };
+		BFC43A5C2C2ABC390033DE13 /* SKTAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC43A5B2C2ABC390033DE13 /* SKTAudio.swift */; };
+		BFC43A5E2C2ABC850033DE13 /* SKAction+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC43A5D2C2ABC850033DE13 /* SKAction+Ext.swift */; };
+		BFC43A612C2ABD660033DE13 /* aiming.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BFC43A5F2C2ABD660033DE13 /* aiming.mp3 */; };
+		BFC43A622C2ABD660033DE13 /* bomb-hit-and-explosion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BFC43A602C2ABD660033DE13 /* bomb-hit-and-explosion.mp3 */; };
+		BFC43A652C2ABD6F0033DE13 /* musicLevel1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BFC43A632C2ABD6E0033DE13 /* musicLevel1.mp3 */; };
+		BFC43A662C2ABD6F0033DE13 /* musicLevel2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BFC43A642C2ABD6F0033DE13 /* musicLevel2.mp3 */; };
+		BFC43A692C2ABD7E0033DE13 /* shoot.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BFC43A672C2ABD7E0033DE13 /* shoot.mp3 */; };
+		BFC43A6A2C2ABD7E0033DE13 /* stone-hit.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BFC43A682C2ABD7E0033DE13 /* stone-hit.mp3 */; };
 		BFD3395F2C2A74D5007AAFF7 /* round-r3.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD3395E2C2A74D5007AAFF7 /* round-r3.png */; };
 		BFD339612C2A74E9007AAFF7 /* round-r1.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD339602C2A74E9007AAFF7 /* round-r1.png */; };
 		BFD339632C2A74FE007AAFF7 /* round-r2.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD339622C2A74FE007AAFF7 /* round-r2.png */; };
@@ -110,6 +118,14 @@
 		BF4C7CE22C2282AF00F5E695 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
+		BFC43A5B2C2ABC390033DE13 /* SKTAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
+		BFC43A5D2C2ABC850033DE13 /* SKAction+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKAction+Ext.swift"; sourceTree = "<group>"; };
+		BFC43A5F2C2ABD660033DE13 /* aiming.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = aiming.mp3; sourceTree = "<group>"; };
+		BFC43A602C2ABD660033DE13 /* bomb-hit-and-explosion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "bomb-hit-and-explosion.mp3"; sourceTree = "<group>"; };
+		BFC43A632C2ABD6E0033DE13 /* musicLevel1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = musicLevel1.mp3; sourceTree = "<group>"; };
+		BFC43A642C2ABD6F0033DE13 /* musicLevel2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = musicLevel2.mp3; sourceTree = "<group>"; };
+		BFC43A672C2ABD7E0033DE13 /* shoot.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shoot.mp3; sourceTree = "<group>"; };
+		BFC43A682C2ABD7E0033DE13 /* stone-hit.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "stone-hit.mp3"; sourceTree = "<group>"; };
 		BFD3395E2C2A74D5007AAFF7 /* round-r3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "round-r3.png"; sourceTree = "<group>"; };
 		BFD339602C2A74E9007AAFF7 /* round-r1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "round-r1.png"; sourceTree = "<group>"; };
 		BFD339622C2A74FE007AAFF7 /* round-r2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "round-r2.png"; sourceTree = "<group>"; };
@@ -214,6 +230,8 @@
 				BF4C7CE22C2282AF00F5E695 /* GameScene.swift */,
 				BF4C7CE52C2282BB00F5E695 /* GameViewController.swift */,
 				BF4C7CE92C2282C200F5E695 /* PhysicsCategory.swift */,
+				BFC43A5A2C2ABC180033DE13 /* Utils */,
+				BFC43A592C2ABC0E0033DE13 /* Sound */,
 				BF4C7CB62C22826200F5E695 /* Main.storyboard */,
 				BF4C7CB92C22826300F5E695 /* Assets.xcassets */,
 				BF4C7CBB2C22826300F5E695 /* LaunchScreen.storyboard */,
@@ -255,6 +273,28 @@
 				BFD339602C2A74E9007AAFF7 /* round-r1.png */,
 			);
 			path = "Round-1";
+			sourceTree = "<group>";
+		};
+		BFC43A592C2ABC0E0033DE13 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Sound;
+			sourceTree = "<group>";
+		};
+		BFC43A5A2C2ABC180033DE13 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				BFC43A5B2C2ABC390033DE13 /* SKTAudio.swift */,
+				BFC43A5D2C2ABC850033DE13 /* SKAction+Ext.swift */,
+				BFC43A5F2C2ABD660033DE13 /* aiming.mp3 */,
+				BFC43A632C2ABD6E0033DE13 /* musicLevel1.mp3 */,
+				BFC43A642C2ABD6F0033DE13 /* musicLevel2.mp3 */,
+				BFC43A672C2ABD7E0033DE13 /* shoot.mp3 */,
+				BFC43A682C2ABD7E0033DE13 /* stone-hit.mp3 */,
+				BFC43A602C2ABD660033DE13 /* bomb-hit-and-explosion.mp3 */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		BFD339642C2A756F007AAFF7 /* Others */ = {
@@ -455,9 +495,11 @@
 				BFE6A3D02C27B8C2007172EA /* ground-right-r2.png in Resources */,
 				BFE6A4062C27EA9C007172EA /* upbeat-happy-jazz-162873.mp3 in Resources */,
 				BFD339612C2A74E9007AAFF7 /* round-r1.png in Resources */,
+				BFC43A6A2C2ABD7E0033DE13 /* stone-hit.mp3 in Resources */,
 				BFE6A40A2C27EA9C007172EA /* farm-hands-fullmix-209424.mp3 in Resources */,
 				BF4C7CE02C2282A300F5E695 /* heart-off.png in Resources */,
 				BFE6A4022C27EA9C007172EA /* power-punch-192118.mp3 in Resources */,
+				BFC43A692C2ABD7E0033DE13 /* shoot.mp3 in Resources */,
 				BFE6A3C42C27B80F007172EA /* background-mid-r2.png in Resources */,
 				BFD339692C2A7580007AAFF7 /* chickens-victory.jpg in Resources */,
 				BFD3396C2C2A7580007AAFF7 /* ducks-win.png in Resources */,
@@ -483,10 +525,12 @@
 				BF4C7CBA2C22826300F5E695 /* Assets.xcassets in Resources */,
 				BFE6A3C92C27B87B007172EA /* ground-left-r2.png in Resources */,
 				BF2E4CCD2C26FC8C006E7D18 /* background-right-r1.png in Resources */,
+				BFC43A652C2ABD6F0033DE13 /* musicLevel1.mp3 in Resources */,
 				BFE6A4082C27EA9C007172EA /* space-trip-114102.mp3 in Resources */,
 				BFE6A3C82C27B87B007172EA /* background-left-r2.png in Resources */,
 				BF2E4CCC2C26FC8C006E7D18 /* background-left-r1.png in Resources */,
 				BF2E4CD72C26FD09006E7D18 /* tomato-bomb.png in Resources */,
+				BFC43A662C2ABD6F0033DE13 /* musicLevel2.mp3 in Resources */,
 				BFD3396A2C2A7580007AAFF7 /* ducks-victory.jpg in Resources */,
 				BFE6A4072C27EA9C007172EA /* intergalactic-space-23014.mp3 in Resources */,
 				BFE6A3D12C27B8C2007172EA /* background-right-r2.png in Resources */,
@@ -497,6 +541,7 @@
 				BF2E4CCE2C26FC8C006E7D18 /* ground-mid-r1.png in Resources */,
 				BFD3396E2C2A75E1007AAFF7 /* duck-r1.png in Resources */,
 				BF09EED82C231C6800421911 /* OrangeButton.png in Resources */,
+				BFC43A622C2ABD660033DE13 /* bomb-hit-and-explosion.mp3 in Resources */,
 				BFE6A3BB2C27B738007172EA /* Round-2.sks in Resources */,
 				BFE6A3D42C27B8D9007172EA /* background-right-r3.png in Resources */,
 				BF2E4CD82C26FD09006E7D18 /* tomato.png in Resources */,
@@ -507,6 +552,7 @@
 				BFE6A3BF2C27B7F4007172EA /* ground-mid-r3.png in Resources */,
 				BFE6A3ED2C27EA58007172EA /* second.png in Resources */,
 				BFE6A3DB2C27E9AD007172EA /* chicken-r2.png in Resources */,
+				BFC43A612C2ABD660033DE13 /* aiming.mp3 in Resources */,
 				BF09EEDC2C231C7700421911 /* bomButton.png in Resources */,
 				BFE6A3E42C27EA05007172EA /* obstacle-r2.png in Resources */,
 			);
@@ -520,8 +566,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF09EED22C22C32200421911 /* Obstacle.swift in Sources */,
+				BFC43A5E2C2ABC850033DE13 /* SKAction+Ext.swift in Sources */,
 				BF4C7CE42C2282AF00F5E695 /* GameScene.swift in Sources */,
 				BF4C7CE72C2282BB00F5E695 /* GameViewController.swift in Sources */,
+				BFC43A5C2C2ABC390033DE13 /* SKTAudio.swift in Sources */,
 				BF4C7CEA2C2282C200F5E695 /* PhysicsCategory.swift in Sources */,
 				BF4C7CAD2C22826200F5E695 /* AppDelegate.swift in Sources */,
 				BF09EED02C22C0D400421911 /* Weapon.swift in Sources */,

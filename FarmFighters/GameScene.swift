@@ -59,6 +59,17 @@ class GameScene: SKScene {
     var isOrangeShot = false
     var timeLabel: SKLabelNode!
     
+    
+    //sound + music
+    let audioManager = SKTAudio.sharedInstance()
+    
+    var aiming = SKAction.playSoundFileNamed("aiming.mp3")
+    var shoot = SKAction.playSoundFileNamed("shoot.mp3")
+    
+    var hitStone = SKAction.playSoundFileNamed("stone-hit.mp3")
+    var hitBomb = SKAction.playSoundFileNamed("bomb-hit-and-explosion.mp3")
+
+    
     static func loadRound(round: Int) -> GameScene? {
         return GameScene(fileNamed: "Round-\(GameScene.round)")
     }
@@ -100,6 +111,9 @@ class GameScene: SKScene {
         Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
             roundText.removeFromParent()
         }
+        
+        //background music
+        audioManager.playBGMusic("musicLevel1.mp3", volume: 0.2)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -128,6 +142,8 @@ class GameScene: SKScene {
             touchStartTime = touch.timestamp
             isNodeReadyToMove = false
             startCountdown()
+            run(aiming)
+            
         } else {
             // Check if the touch was on any of the weapon buttons
             for button in orangeButton {
@@ -222,6 +238,7 @@ class GameScene: SKScene {
         selectedCharacter = nil
         touchStartTime = nil
         isNodeReadyToMove = false
+        run(shoot)
     }
     
     
@@ -616,11 +633,18 @@ class GameScene: SKScene {
 
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
+        guard let weapon = weapon else {return}
         let other = contact.bodyA.categoryBitMask == PhysicsCategory.Orange ? contact.bodyB : contact.bodyA
         
         switch other.categoryBitMask {
         case PhysicsCategory.Character:
-            if contact.collisionImpulse > 75 && !isNodeReadyToMove{
+            if contact.collisionImpulse > 50 && !isNodeReadyToMove{
+                if weapon.type == .orange{
+                    run(hitStone)
+                }else{
+                    run(hitBomb)
+                }
+                
                 if let characterNode = other.node as? SKSpriteNode, let character = characters[characterNode.name ?? ""] {
                     let characterPlayer: Player
                     
@@ -632,7 +656,7 @@ extension GameScene: SKPhysicsContactDelegate {
                         return
                     }
                     
-                    if weapon?.playerTurn != characterPlayer.turn {
+                    if weapon.playerTurn != characterPlayer.turn {
                         //                        print("Weapon owned by \(weapon?.playerTurn == .player1 ? "player1" : "player2")")
                         //                        print("Damaged")
                         reduceLife(character: character)
@@ -644,9 +668,12 @@ extension GameScene: SKPhysicsContactDelegate {
         case PhysicsCategory.Obstacle:
             if contact.collisionImpulse > 50{
                 if let obstacleNode = other.node as? SKSpriteNode, let obstacle = obstacles[obstacleNode.name ?? ""] {
-                    if weapon?.type == .bom {
+                    if weapon.type == .bom {
                         obstacle.node.removeFromParent()
                         obstacles.removeValue(forKey: obstacleNode.name ?? "")
+                        run(hitBomb)
+                    }else{
+                        run(hitStone)
                     }
                 }
             }
