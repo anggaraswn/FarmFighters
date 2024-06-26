@@ -145,7 +145,19 @@ class GameScene: SKScene {
             initialNodePosition = character.position
             touchStartTime = touch.timestamp
             
-            guard !isNodeReadyToMove else {return}
+            guard !isNodeReadyToMove else {
+                if let texture = selectedCharacter?.node.texture {
+                    let newPhysicsBody = SKPhysicsBody(texture: texture, size: (selectedCharacter?.node.size)!)
+                    newPhysicsBody.isDynamic = true
+                    newPhysicsBody.allowsRotation = false
+                    newPhysicsBody.pinned = false
+                    newPhysicsBody.affectedByGravity = true
+                    newPhysicsBody.categoryBitMask = PhysicsCategory.Character
+                    newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
+                    selectedCharacter?.node.physicsBody = newPhysicsBody
+                }
+                return
+            }
             
             node.physicsBody = nil
             
@@ -469,7 +481,7 @@ class GameScene: SKScene {
     func checkVictory() -> Bool{
         if GameScene.player1.winningRound == 2 || GameScene.player2.winningRound == 2{
             isGameOver = true
-            var node: SKSpriteNode
+//            var node: SKSpriteNode
             if GameScene.player1.winningRound == 2{
 //                node = displayImage(imageNamed: "chickens-victory", anchorPoint: CGPoint(x: 0.5, y: 0.5))
                 chickenVictory()
