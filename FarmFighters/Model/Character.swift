@@ -32,8 +32,8 @@ class Character{
     init(node: SKSpriteNode, scene: SKScene) {
         self.node = node
         self._position = node.position
-        heart = SKSpriteNode(imageNamed: "heart-on")
-        heart.setScale(0.5)
+        heart = SKSpriteNode(imageNamed: "Heart-on")
+        heart.setScale(0.05)
         heart.position = CGPoint(x: _position.x, y: _position.y + 220)
         heart.zPosition = 1
         
@@ -42,11 +42,11 @@ class Character{
     
     private func updateHealth(){
         if health == 1 {
-            heart.texture = SKTexture(imageNamed: "heart-on")
+            heart.texture = SKTexture(imageNamed: "Heart-on")
         }else if health == 0.5{
-            heart.texture = SKTexture(imageNamed: "heart-half")
+            heart.texture = SKTexture(imageNamed: "Heart-half")
         }else{
-            heart.texture = SKTexture(imageNamed: "heart-off")
+            heart.texture = SKTexture(imageNamed: "Heart-off")
             heart.removeFromParent()
         }
     }

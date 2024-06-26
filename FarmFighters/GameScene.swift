@@ -113,7 +113,18 @@ class GameScene: SKScene {
         }
         
         //background music
-        audioManager.playBGMusic("musicLevel1.mp3", volume: 0.2)
+        
+        switch GameScene.round {
+        case 1:
+            audioManager.playBGMusic("musicLevel1.mp3", volume: 0.2)
+        case 2:
+            audioManager.playBGMusic("musicLevel2.mp3", volume: 0.2)
+        case 3:
+            audioManager.playBGMusic("musicLevel3.mp3", volume: 0.2)
+        default:
+            break
+        }
+        
     }
     
     
@@ -159,7 +170,6 @@ class GameScene: SKScene {
             
             for button in positionButton {
                 if button.contains(location) {
-                    let currentPlayer = getCurrentPlayer()
 
                     // Check the button's state and update accordingly
                     if button.userData == nil {
@@ -167,7 +177,7 @@ class GameScene: SKScene {
                     }
                     
                     if button.userData?["state"] as? String == "initial" {
-                        if !currentPlayer.hasUsedPosition {
+                 
                             let informationRepositioning = displayImage(imageNamed: "informationText", anchorPoint: CGPoint(x: 0.5, y: 0.5))
                             Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
                                 informationRepositioning.removeFromParent()
@@ -176,11 +186,10 @@ class GameScene: SKScene {
                             button.texture = SKTexture(imageNamed: "Done")
                             button.userData = ["state": "done"]
                             isNodeReadyToMove = true
-                        }
+                        
                     } else if button.userData?["state"] as? String == "done" {
                         button.texture = SKTexture(imageNamed: "ChangePositionDead")
                         button.userData = ["state": "changePositionDead"]
-                        currentPlayer.hasUsedPosition = true
                         isNodeReadyToMove = false
                     } else if button.userData?["state"] as? String == "changePositionDead" {
                         showAlert(title: "Reposition Used", message: "You have already used the reposition this round.")
@@ -192,16 +201,20 @@ class GameScene: SKScene {
 
 
             
-        
-            
             for button in bomButton {
+                
                 if button.contains(location) {
-                    let currentPlayer = getCurrentPlayer()
-                    if !currentPlayer.hasUsedBom {
-                        currentWeapon = .bom
-                        currentPlayer.hasUsedBom = true
+                    if button.userData == nil {
+                        button.userData = ["state": "initial"]
+                    }
+                    
+                    if button.userData?["state"] as? String == "initial" {
                         button.texture = SKTexture(imageNamed: "BombAttackDead")
-                    } else {
+                        button.userData = ["state": "done"]
+                        currentWeapon = .bom
+                    }
+                    
+                    else {
                         showAlert(title: "Bom Used", message: "You have already used the bom this round.")
                     }
                     break
@@ -396,7 +409,10 @@ class GameScene: SKScene {
     }
     
     func checkEndRound() {
+        print("Check Round dipanggil ga")
         if GameScene.player1.characters.isEmpty || GameScene.player2.characters.isEmpty {
+            print("Apakah empty player1: \(GameScene.player1.characters.count)")
+            print("Apakah empty player2: \(GameScene.player2.characters.count)")
             isGameOver = true
             if GameScene.player1.characters.isEmpty{
                 GameScene.player2.winningRound += 1
@@ -405,11 +421,15 @@ class GameScene: SKScene {
                 GameScene.player1.winningRound += 1
                 _ = displayImage(imageNamed: "chickens-win", anchorPoint: CGPoint(x: 0.5, y: 0.5))
             }
+            resetGame()
             GameScene.round += 1
             if checkVictory(){
                 print("Game Over")
                 return
             }
+            
+            print("Keluar ga")
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                 if let scene = GameScene.loadRound(round: GameScene.round){
                     scene.scaleMode = .aspectFill
@@ -421,17 +441,39 @@ class GameScene: SKScene {
         }
     }
     
+    func chickenVictory(){
+        let chicken = SKSpriteNode(imageNamed: "chickens-victory")
+        chicken.name = "chicken"
+        chicken.zPosition = 101.0
+        chicken.position = cameraNode.position
+        
+        addChild(chicken)
+    }
+    
+    func duckVictory(){
+        let duck = SKSpriteNode(imageNamed: "ducks-victory")
+        duck.name = "duck"
+        duck.zPosition = 101.0
+        duck.position = cameraNode.position
+        
+        addChild(duck)
+    }
+    
+    
+    
     func checkVictory() -> Bool{
         if GameScene.player1.winningRound == 2 || GameScene.player2.winningRound == 2{
             isGameOver = true
             var node: SKSpriteNode
             if GameScene.player1.winningRound == 2{
-                node = displayImage(imageNamed: "chickens-victory", anchorPoint: CGPoint(x: 0, y: 0))
+//                node = displayImage(imageNamed: "chickens-victory", anchorPoint: CGPoint(x: 0.5, y: 0.5))
+                chickenVictory()
             }else{
-                node = displayImage(imageNamed: "ducks-victory", anchorPoint: CGPoint(x: 0, y: 0))
+//                node = displayImage(imageNamed: "ducks-victory", anchorPoint: CGPoint(x: 0.5, y: 0.5))
+                duckVictory()
             }
             
-            node.zPosition = 101
+//            node.zPosition = 101
             return true
         }
         

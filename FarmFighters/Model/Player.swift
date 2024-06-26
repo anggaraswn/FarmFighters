@@ -14,11 +14,16 @@ class Player{
     var numberOfBombs: Int = 1
     var winningRound: Int = 0
     var turn: PlayerTurn
-    var hasUsedBom: Bool = false
-    var hasUsedPosition: Bool = false
     
     init(characters: [Character], turn: PlayerTurn) {
         self.characters = characters
         self.turn = turn
     }
+    
+//    func resetRound(){
+//        hasUsedBom = false
+//        hasUsedPosition = false
+//        numberOfBombs = 1
+////        movementToken
+//    }
 }
