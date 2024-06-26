@@ -76,6 +76,7 @@ class GameScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
+        GameScene.player1.winningRound = 1
         print("Round = \(GameScene.round)")
         shapeNode.lineWidth = 40
         shapeNode.lineCap = .round
@@ -145,7 +146,19 @@ class GameScene: SKScene {
             initialNodePosition = character.position
             touchStartTime = touch.timestamp
             
-            guard !isNodeReadyToMove else {return}
+            guard !isNodeReadyToMove else {
+                if let texture = selectedCharacter?.node.texture {
+                    let newPhysicsBody = SKPhysicsBody(texture: texture, size: (selectedCharacter?.node.size)!)
+                    newPhysicsBody.isDynamic = true
+                    newPhysicsBody.allowsRotation = false
+                    newPhysicsBody.pinned = false
+                    newPhysicsBody.affectedByGravity = true
+                    newPhysicsBody.categoryBitMask = PhysicsCategory.Character
+                    newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
+                    selectedCharacter?.node.physicsBody = newPhysicsBody
+                }
+                return
+            }
             
             node.physicsBody = nil
             
@@ -433,8 +446,6 @@ class GameScene: SKScene {
                 return
             }
             
-            print("Keluar ga")
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                 if let scene = GameScene.loadRound(round: GameScene.round){
                     scene.scaleMode = .aspectFill
@@ -469,7 +480,7 @@ class GameScene: SKScene {
     func checkVictory() -> Bool{
         if GameScene.player1.winningRound == 2 || GameScene.player2.winningRound == 2{
             isGameOver = true
-            var node: SKSpriteNode
+//            var node: SKSpriteNode
             if GameScene.player1.winningRound == 2{
 //                node = displayImage(imageNamed: "chickens-victory", anchorPoint: CGPoint(x: 0.5, y: 0.5))
                 chickenVictory()
@@ -477,6 +488,16 @@ class GameScene: SKScene {
 //                node = displayImage(imageNamed: "ducks-victory", anchorPoint: CGPoint(x: 0.5, y: 0.5))
                 duckVictory()
             }
+            
+            let winningRoundLabel = SKLabelNode(text: "\(GameScene.player1.winningRound):\(GameScene.player2.winningRound)")
+            winningRoundLabel.position = CGPoint(x: cameraNode.position.x, y: cameraNode.position.y - 400)
+            winningRoundLabel.fontSize = 400
+            winningRoundLabel.fontName = "SFProDisplay-Black"
+            winningRoundLabel.fontColor = .white
+
+            winningRoundLabel.zPosition = 150
+            
+            addChild(winningRoundLabel)
             
 //            node.zPosition = 101
             return true
