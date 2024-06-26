@@ -67,6 +67,12 @@ class MainMenu: SKScene{
         let node = atPoint(touch.location(in: self))
         
         if node.name == "play" {
+            // Create a black background node
+            let backgroundNode = SKSpriteNode(color: .black, size: self.size)
+            backgroundNode.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+            backgroundNode.zPosition = 100
+            addChild(backgroundNode)
+            
             let texture = SKTexture(imageNamed: "first")
             let spriteNode = SKSpriteNode(texture: texture)
             spriteNode.anchorPoint = anchorPoint
@@ -79,27 +85,27 @@ class MainMenu: SKScene{
             spriteNode.run(fadeIn)
             
             Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { _ in
-                let fadeOut = SKAction.fadeOut(withDuration: 1.0)
+                let fadeOut = SKAction.fadeOut(withDuration: 0.3)
                 let changeTexture = SKAction.run {
                     spriteNode.texture = SKTexture(imageNamed: "second")
                 }
-                let fadeIn = SKAction.fadeIn(withDuration: 1.0)
+                let fadeIn = SKAction.fadeIn(withDuration: 0.3)
                 let sequence = SKAction.sequence([fadeOut, changeTexture, fadeIn])
                 spriteNode.run(sequence)
             }
             
             Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
-                let fadeOut = SKAction.fadeOut(withDuration: 1.0)
+                let fadeOut = SKAction.fadeOut(withDuration: 0.3)
                 let changeTexture = SKAction.run {
                     spriteNode.texture = SKTexture(imageNamed: "third")
                 }
-                let fadeIn = SKAction.fadeIn(withDuration: 1.0)
+                let fadeIn = SKAction.fadeIn(withDuration: 0.3)
                 let sequence = SKAction.sequence([fadeOut, changeTexture, fadeIn])
                 spriteNode.run(sequence)
             }
             
             Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
-                let fadeOut = SKAction.fadeOut(withDuration: 1.0)
+                let fadeOut = SKAction.fadeOut(withDuration: 0.3)
                 let changeScene = SKAction.run {
                     if let scene = GameScene.loadRound(round: 1) {
                         scene.scaleMode = .aspectFill
