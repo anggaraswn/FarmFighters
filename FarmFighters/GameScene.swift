@@ -36,13 +36,7 @@ class GameScene: SKScene {
     var playerTurn: PlayerTurn = .player1
     
     var selectedCharacter: Character?
-    var isNodeReadyToMove = false {
-        didSet{
-            cancelIcon.position = cameraNode.position
-            cancelIcon.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            cancelIcon.isHidden = !isNodeReadyToMove
-        }
-    }
+    var isNodeReadyToMove = false
     var initialNodePosition: CGPoint?
     var cancelIcon: SKSpriteNode!
     
@@ -59,7 +53,7 @@ class GameScene: SKScene {
     var isWeaponShot = false
     var isGameOver = false
     var isBombShot = false
-    var countdownLabel: SKSpriteNode!
+    var countdownLabel: SKSpriteNode = SKSpriteNode()
     
     
     //sound + music
@@ -70,14 +64,17 @@ class GameScene: SKScene {
     
     var hitStone = SKAction.playSoundFileNamed("stone-hit.mp3")
     var hitBomb = SKAction.playSoundFileNamed("bomb-hit-and-explosion.mp3")
+    
+    let doneTexture = SKTexture(imageNamed: "Done")
+    let changePositionDeadTexture = SKTexture(imageNamed: "ChangePositionDead")
 
+    var isRepositioning = false // Flag to track reposition process
     
     static func loadRound(round: Int) -> GameScene? {
         return GameScene(fileNamed: "Round-\(GameScene.round)")
     }
     
     override func didMove(to view: SKView) {
-        GameScene.player1.winningRound = 1
         print("Round = \(GameScene.round)")
         shapeNode.lineWidth = 40
         shapeNode.lineCap = .round
@@ -125,9 +122,17 @@ class GameScene: SKScene {
         let touch = touches.first!
         let location = touch.location(in: self)
         
+        
         if let node = atPoint(location) as? SKSpriteNode, let nodeName = node.name, let character = characters[nodeName], !isWeaponShot{
             
+            selectedCharacter = character
+            initialNodePosition = character.position
+            touchStartTime = touch.timestamp
+            
+            guard !isNodeReadyToMove else {return}
+            
             node.physicsBody = nil
+            
             
             print("Turn \(playerTurn == .player1 ? "player1" : "player2")")
             weapon = Weapon(type: currentWeapon, playerTurn: playerTurn)
@@ -142,25 +147,50 @@ class GameScene: SKScene {
             // Reset the shot flag
             isWeaponShot = false
             
-            selectedCharacter = character
-            initialNodePosition = character.position
-            touchStartTime = touch.timestamp
-            isNodeReadyToMove = false
+            
+           
+//            isNodeReadyToMove = false
             startCountdown()
             run(aiming)
             
         } else {
             // Check if the touch was on any of the weapon buttons
             
+            
             for button in positionButton {
                 if button.contains(location) {
-                    let informationRepositioning = displayImage(imageNamed: "informationText", anchorPoint: CGPoint(x: 0.5, y: 0.5))
-                    Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
-                        informationRepositioning.removeFromParent()
+                    let currentPlayer = getCurrentPlayer()
+
+                    // Check the button's state and update accordingly
+                    if button.userData == nil {
+                        button.userData = ["state": "initial"]
                     }
+                    
+                    if button.userData?["state"] as? String == "initial" {
+                        if !currentPlayer.hasUsedPosition {
+                            let informationRepositioning = displayImage(imageNamed: "informationText", anchorPoint: CGPoint(x: 0.5, y: 0.5))
+                            Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
+                                informationRepositioning.removeFromParent()
+                            }
+                            
+                            button.texture = SKTexture(imageNamed: "Done")
+                            button.userData = ["state": "done"]
+                            isNodeReadyToMove = true
+                        }
+                    } else if button.userData?["state"] as? String == "done" {
+                        button.texture = SKTexture(imageNamed: "ChangePositionDead")
+                        button.userData = ["state": "changePositionDead"]
+                        currentPlayer.hasUsedPosition = true
+                        isNodeReadyToMove = false
+                    } else if button.userData?["state"] as? String == "changePositionDead" {
+                        showAlert(title: "Reposition Used", message: "You have already used the reposition this round.")
+                    }
+                    
                     break
                 }
             }
+
+
             
         
             
@@ -183,6 +213,7 @@ class GameScene: SKScene {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         var location = touch.location(in: self)
+        
         
         if !isNodeReadyToMove && !isWeaponShot{
             let dx = location.x - touchStart.x
@@ -260,7 +291,7 @@ class GameScene: SKScene {
         character.heart.alpha = 1.0
         selectedCharacter = nil
         touchStartTime = nil
-        isNodeReadyToMove = false
+//        isNodeReadyToMove = false
     }
     
     func resetWeaponToOrange() {
@@ -317,9 +348,6 @@ class GameScene: SKScene {
                 orangeStoppedTime = nil
             }
         }
-        
-        checkNodeReadyToMove(currentTime: currentTime)
-        
         for character in characters.values {
             character.updateHeartPosition()
         }
@@ -440,40 +468,6 @@ class GameScene: SKScene {
     
     func getCurrentPlayer() -> Player{
         return playerTurn == GameScene.player1.turn ? GameScene.player1 : GameScene.player2
-    }
-    
-    func checkNodeReadyToMove(currentTime: TimeInterval){
-        if let touchStartTime = touchStartTime, let character = selectedCharacter {
-            let touchDuration = currentTime - touchStartTime
-            
-            if touchDuration >= 3.0 && getCurrentPlayer().movementToken > 0 {
-                isNodeReadyToMove = true
-                character.node.alpha = 0.5
-                character.heart.alpha = 0.5
-                weapon?.removeFromParent()
-                weapon = nil
-                shapeNode.path = nil
-                isWeaponShot = false
-                for dot in pathDots {
-                    dot.removeFromParent()
-                }
-                pathDots.removeAll()
-                touchStart = .zero
-                countdownLabel.removeAllActions()
-                countdownLabel.removeFromParent()
-                
-                if let texture = character.node.texture {
-                    let newPhysicsBody = SKPhysicsBody(texture: texture, size: character.node.size)
-                    newPhysicsBody.isDynamic = true
-                    newPhysicsBody.allowsRotation = false
-                    newPhysicsBody.pinned = false
-                    newPhysicsBody.affectedByGravity = true
-                    newPhysicsBody.categoryBitMask = PhysicsCategory.Character
-                    newPhysicsBody.contactTestBitMask = PhysicsCategory.Orange
-                    character.node.physicsBody = newPhysicsBody
-                }
-            }
-        }
     }
     
     func setUpCharacter(){
